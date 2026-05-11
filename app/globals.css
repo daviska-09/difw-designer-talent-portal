@@ -1,27 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=Barlow+Condensed:wght@500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #000000;
+  --color-text: #ffffff;
+  --color-text-secondary: #888888;
+  --color-text-muted: #444444;
+  --color-border: #333333;
+  --color-divider: #1a1a1a;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-ui: 'Barlow Condensed', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
+html,
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Input base */
+.input-base {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
+  border-radius: 0;
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 15px;
+  padding: 10px 0;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input-base::placeholder {
+  color: #444;
+}
+
+.input-base:focus {
+  border-bottom-color: #fff;
+}
+
+.input-base:-webkit-autofill,
+.input-base:-webkit-autofill:hover,
+.input-base:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #000 inset;
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+}
+
+textarea.input-base {
+  resize: vertical;
+  min-height: 120px;
+  border: 1px solid #333;
+  padding: 12px;
+}
+
+textarea.input-base:focus {
+  border-color: #fff;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; }
+
+/* ─── Light form theme — /talent/apply and /membership/apply only ─── */
+.form-light {
+  color: #000;
+  background: #fff;
+}
+
+.form-light label {
+  color: #555;
+}
+
+.form-light .input-base {
+  color: #000;
+  border-bottom-color: #ccc;
+}
+
+.form-light .input-base::placeholder {
+  color: #bbb;
+}
+
+.form-light .input-base:focus {
+  border-bottom-color: #000;
+}
+
+.form-light textarea.input-base {
+  border-color: #ccc;
+}
+
+.form-light textarea.input-base:focus {
+  border-color: #000;
+}
+
+.form-light .input-base:-webkit-autofill,
+.form-light .input-base:-webkit-autofill:hover,
+.form-light .input-base:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: #000;
+  caret-color: #000;
+}
+
+/* Error state for inputs */
+.input-base.input-error {
+  border-bottom-color: #cc0000;
+}
+
+.form-light textarea.input-base.input-error {
+  border-color: #cc0000;
 }
