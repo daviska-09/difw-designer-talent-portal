@@ -72,20 +72,23 @@ export async function POST(
       updateMembershipStatusInAirtable(app.airtable_record_id, 'paid').catch(console.error)
     }
 
-    // Generate magic link and send welcome email — non-blocking, failures logged only
-    service.auth.admin.generateLink({
-      type: 'magiclink',
-      email: app.email,
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`,
-      },
-    }).then(({ data: linkData, error: linkError }) => {
+    // Generate magic link and send welcome email — must be awaited so Vercel doesn't kill the function before it completes
+    try {
+      const { data: linkData, error: linkError } = await service.auth.admin.generateLink({
+        type: 'magiclink',
+        email: app.email,
+        options: {
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`,
+        },
+      })
       if (linkError || !linkData?.properties?.action_link) {
         console.error('Magic link generation error:', linkError)
-        return
+      } else {
+        await sendMemberWelcome(app.email, app.full_name, linkData.properties.action_link)
       }
-      sendMemberWelcome(app.email, app.full_name, linkData.properties.action_link).catch(console.error)
-    }).catch(console.error)
+    } catch (emailErr) {
+      console.error('Welcome email error:', emailErr)
+    }
 
     return NextResponse.json({ success: true })
   } catch (err) {
