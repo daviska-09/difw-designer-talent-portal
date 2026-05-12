@@ -21,22 +21,30 @@ export async function POST(
 
     const service = createServiceClient()
 
-    const { data, error } = await service
+    const { data: app, error: fetchError } = await service
+      .from('membership_applications')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (fetchError || !app) {
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 })
+    }
+
+    const { error: updateError } = await service
       .from('membership_applications')
       .update({ status: 'approved' })
       .eq('id', params.id)
-      .select()
-      .single()
 
-    if (error || !data) {
-      console.error('Approve update error:', error)
-      return NextResponse.json({ error: error?.message ?? 'Update failed — no data returned' }, { status: 500 })
+    if (updateError) {
+      console.error('Approve update error:', updateError)
+      return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
-    await sendMembershipApproval(data.email, data.full_name, data.membership_tier, payment_link, payment_amount)
+    await sendMembershipApproval(app.email, app.full_name, app.membership_tier, payment_link, payment_amount)
 
-    if (data.airtable_record_id) {
-      updateMembershipStatusInAirtable(data.airtable_record_id, 'approved').catch(console.error)
+    if (app.airtable_record_id) {
+      updateMembershipStatusInAirtable(app.airtable_record_id, 'approved').catch(console.error)
     }
 
     return NextResponse.json({ success: true })
