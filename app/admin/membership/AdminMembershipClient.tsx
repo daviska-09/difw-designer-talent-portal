@@ -382,6 +382,8 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
   const [selectedApp, setSelectedApp] = useState<MembershipApplication | null>(null)
   const [statusFilter, setStatusFilter] = useState<FilterStatus>('all')
   const [tierFilter, setTierFilter] = useState<MembershipTier | 'all'>('all')
+  const [locationFilter, setLocationFilter] = useState('all')
+  const [search, setSearch] = useState('')
 
   function handleStatusChange(id: string, status: MembershipStatus) {
     setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
@@ -402,15 +404,25 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
   const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
   const deleted = useMemo(() => applications.filter((a) => !!a.deleted_at), [applications])
 
+  const locations = useMemo(() =>
+    [...new Set(applications.map((a) => a.location).filter(Boolean))].sort()
+  , [applications])
+
   const filtered = useMemo(() => {
-    if (statusFilter === 'deleted') {
-      return tierFilter === 'all' ? deleted : deleted.filter((a) => a.membership_tier === tierFilter)
-    }
-    let result = active
-    if (statusFilter !== 'all') result = result.filter((a) => a.status === statusFilter)
+    let result = statusFilter === 'deleted' ? deleted : active
+    if (statusFilter !== 'all' && statusFilter !== 'deleted') result = result.filter((a) => a.status === statusFilter)
     if (tierFilter !== 'all') result = result.filter((a) => a.membership_tier === tierFilter)
+    if (locationFilter !== 'all') result = result.filter((a) => a.location === locationFilter)
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      result = result.filter((a) =>
+        a.full_name.toLowerCase().includes(q) ||
+        a.brand_name.toLowerCase().includes(q) ||
+        a.email.toLowerCase().includes(q)
+      )
+    }
     return result
-  }, [active, deleted, statusFilter, tierFilter])
+  }, [active, deleted, statusFilter, tierFilter, locationFilter, search])
 
   const counts = useMemo(() => ({
     all: active.length,
@@ -454,7 +466,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
         </div>
 
         {/* Tier filter */}
-        <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b border-[#1a1a1a]">
+        <div className="flex flex-wrap gap-3 mb-6">
           {(['all', ...TIER_OPTIONS] as const).map((t) => (
             <button
               key={t}
@@ -466,6 +478,50 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
               {t === 'all' ? 'All Tiers' : TIER_LABELS[t as MembershipTier]}
             </button>
           ))}
+        </div>
+
+        {/* Location filter */}
+        {locations.length > 0 && (
+          <div className="flex flex-wrap gap-3 mb-6">
+            <button
+              onClick={() => setLocationFilter('all')}
+              className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
+                locationFilter === 'all' ? 'border-white text-white' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+              }`}
+            >
+              All Locations
+            </button>
+            {locations.map((loc) => (
+              <button
+                key={loc}
+                onClick={() => setLocationFilter(loc)}
+                className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
+                  locationFilter === loc ? 'border-white text-white' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+                }`}
+              >
+                {loc}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Search */}
+        <div className="relative mb-8 pb-8 border-b border-[#1a1a1a]">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name, brand or email..."
+            className="w-full bg-transparent border-b border-[#333] text-white font-body text-sm py-2 pr-8 placeholder:text-[#555] placeholder:tracking-[1px] placeholder:uppercase focus:outline-none focus:border-[#666] transition-colors"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-[#888] hover:text-white transition-colors text-lg leading-none pb-1"
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {/* Table */}
