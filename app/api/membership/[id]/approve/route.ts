@@ -28,7 +28,8 @@ export async function POST(
       .single()
 
     if (fetchError || !app) {
-      return NextResponse.json({ error: 'Application not found' }, { status: 404 })
+      console.error('Fetch error:', fetchError)
+      return NextResponse.json({ error: fetchError?.message ?? 'Application not found', id: params.id }, { status: 404 })
     }
 
     const { error: updateError } = await service
