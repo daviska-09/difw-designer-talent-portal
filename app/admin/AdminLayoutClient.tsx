@@ -1,11 +1,19 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Logo } from '@/components/layout/Logo'
+import { createClient } from '@/lib/supabase/client'
 
 export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  async function handleLogout() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/admin/login')
+  }
 
   if (pathname === '/admin/login') {
     return <div className="min-h-screen bg-black">{children}</div>
@@ -43,10 +51,16 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
           </Link>
         </nav>
 
-        <div className="px-6 py-5 border-t border-[#1a1a1a]">
-          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#444]">
+        <div className="px-4 py-4 border-t border-[#1a1a1a] flex flex-col gap-1">
+          <span className="px-4 text-xs tracking-[2px] uppercase font-ui font-semibold text-[#444]">
             Admin
           </span>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-3 font-display text-sm tracking-[3px] uppercase text-[#888] hover:text-white hover:bg-[#111] transition-colors text-left"
+          >
+            Log Out
+          </button>
         </div>
       </aside>
 
