@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/Input'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import type { MembershipApplication, MembershipStatus, MembershipTier } from '@/lib/types'
 
-const STATUS_OPTIONS: MembershipStatus[] = ['pending', 'approved', 'rejected', 'paid']
 const TIER_OPTIONS: MembershipTier[] = ['emerging_designer', 'established_designer', 'signature_designer', 'curator']
 
 const TIER_LABELS: Record<MembershipTier, string> = {
@@ -404,9 +403,17 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
   const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
   const deleted = useMemo(() => applications.filter((a) => !!a.deleted_at), [applications])
 
-  const locations = useMemo(() =>
-    [...new Set(applications.map((a) => a.location).filter(Boolean))].sort()
-  , [applications])
+  const locations = useMemo(() => {
+    const seen: Record<string, true> = {}
+    const result: string[] = []
+    for (const a of applications) {
+      if (a.location && !seen[a.location]) {
+        seen[a.location] = true
+        result.push(a.location)
+      }
+    }
+    return result.sort()
+  }, [applications])
 
   const filtered = useMemo(() => {
     let result = statusFilter === 'deleted' ? deleted : active
