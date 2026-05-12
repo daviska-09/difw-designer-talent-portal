@@ -90,8 +90,7 @@ export function AdminTalentClient({
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Talent Applications</h1>
-          <p className="text-white text-sm">{active.length} active</p>
+          <h1 className="font-display text-4xl tracking-[3px] uppercase">Talent Applications</h1>
         </div>
 
         {/* Status filter */}

@@ -434,8 +434,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
     <div className="px-8 py-10">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
-          <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Membership Applications</h1>
-          <p className="text-white text-sm">{active.length} active</p>
+          <h1 className="font-display text-4xl tracking-[3px] uppercase">Membership Applications</h1>
         </div>
 
         {/* Status filter */}
