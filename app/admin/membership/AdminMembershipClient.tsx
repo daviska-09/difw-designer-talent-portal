@@ -244,30 +244,49 @@ function DetailPanel({
                   </Button>
                 )}
                 {app.status === 'paid' && (
-                  <>
-                    <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500 self-center">Account Active</p>
-                    <Button variant="outline" onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading}>
+                  <div className="w-full flex flex-col gap-3">
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500">Account Active</p>
+                      {confirmingDelete ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Delete?</span>
+                          <button onClick={handleDelete} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold px-3 py-1 bg-[#CC0000] text-white disabled:opacity-40">
+                            Confirm
+                          </button>
+                          <button onClick={() => setConfirmingDelete(false)} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] hover:text-white transition-colors">
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <button onClick={() => setConfirmingDelete(true)} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold px-3 py-1 bg-[#CC0000] text-white disabled:opacity-40">
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                    <Button variant="outline" onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading} className="self-start text-xs px-4 py-2">
                       Resend Welcome Email
                     </Button>
-                  </>
+                  </div>
                 )}
                 {app.status === 'rejected' && (
                   <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Rejected</p>
                 )}
-                {confirmingDelete ? (
-                  <>
-                    <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
-                    <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
-                      Confirm
+                {app.status !== 'paid' && (
+                  confirmingDelete ? (
+                    <>
+                      <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
+                      <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
+                        Confirm
+                      </Button>
+                      <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
+                      Delete
                     </Button>
-                    <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
-                      Cancel
-                    </Button>
-                  </>
-                ) : (
-                  <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
-                    Delete
-                  </Button>
+                  )
                 )}
               </>
             )}
