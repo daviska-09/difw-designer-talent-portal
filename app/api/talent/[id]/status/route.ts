@@ -22,30 +22,38 @@ export async function PATCH(
 
     const service = createServiceClient()
 
-    const { data, error } = await service
+    const { data: rows, error: fetchError } = await service
+      .from('talent_applications')
+      .select('email, first_name, airtable_record_id')
+      .eq('id', params.id)
+
+    const app = rows?.[0]
+    if (fetchError || !app) {
+      return NextResponse.json({ error: 'Application not found' }, { status: 404 })
+    }
+
+    const { error: updateError } = await service
       .from('talent_applications')
       .update({ status })
       .eq('id', params.id)
-      .select()
-      .single()
 
-    if (error || !data) {
+    if (updateError) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
     // Sync to Airtable
-    if (data.airtable_record_id) {
-      updateTalentStatusInAirtable(data.airtable_record_id, status).catch(console.error)
+    if (app.airtable_record_id) {
+      updateTalentStatusInAirtable(app.airtable_record_id, status).catch(console.error)
     }
 
     // Send email
     if (status === 'approved') {
-      sendTalentApproval(data.email, data.first_name).catch(console.error)
+      sendTalentApproval(app.email, app.first_name).catch(console.error)
     } else {
-      sendTalentRejection(data.email, data.first_name).catch(console.error)
+      sendTalentRejection(app.email, app.first_name).catch(console.error)
     }
 
-    return NextResponse.json({ success: true, data })
+    return NextResponse.json({ success: true })
   } catch (err) {
     console.error('Talent status update error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

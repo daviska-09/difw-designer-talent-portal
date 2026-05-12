@@ -16,12 +16,12 @@ export async function POST(
 
     const service = createServiceClient()
 
-    const { data: app, error: appError } = await service
+    const { data: rows, error: appError } = await service
       .from('membership_applications')
       .select('*')
       .eq('id', params.id)
-      .single()
 
+    const app = rows?.[0]
     if (appError || !app) {
       return NextResponse.json({ error: 'Application not found' }, { status: 404 })
     }

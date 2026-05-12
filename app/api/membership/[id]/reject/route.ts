@@ -15,19 +15,23 @@ export async function POST(
 
     const service = createServiceClient()
 
-    const { data, error } = await service
+    const { data: rows, error } = await service
       .from('membership_applications')
-      .update({ status: 'rejected' })
+      .select('airtable_record_id')
       .eq('id', params.id)
-      .select()
-      .single()
 
-    if (error || !data) {
+    if (error) {
       return NextResponse.json({ error: 'Update failed' }, { status: 500 })
     }
 
-    if (data.airtable_record_id) {
-      updateMembershipStatusInAirtable(data.airtable_record_id, 'rejected').catch(console.error)
+    await service
+      .from('membership_applications')
+      .update({ status: 'rejected' })
+      .eq('id', params.id)
+
+    const airtableId = rows?.[0]?.airtable_record_id
+    if (airtableId) {
+      updateMembershipStatusInAirtable(airtableId, 'rejected').catch(console.error)
     }
 
     return NextResponse.json({ success: true })
