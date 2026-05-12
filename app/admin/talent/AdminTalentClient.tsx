@@ -91,7 +91,7 @@ export function AdminTalentClient({
         {/* Header */}
         <div className="mb-10">
           <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Talent Applications</h1>
-          <p className="text-white text-sm">{active.length} active · {deleted.length} deleted</p>
+          <p className="text-white text-sm">{active.length} active</p>
         </div>
 
         {/* Status filter */}

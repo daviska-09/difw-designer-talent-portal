@@ -387,7 +387,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
           <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Membership Applications</h1>
-          <p className="text-white text-sm">{active.length} active · {deleted.length} deleted</p>
+          <p className="text-white text-sm">{active.length} active</p>
         </div>
 
         {/* Status filter */}
