@@ -431,25 +431,26 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
 
         {/* Status filter */}
         <div className="flex flex-wrap gap-3 mb-6">
-          {(['all', ...STATUS_OPTIONS] as const).map((s) => (
+          {([
+            { label: 'All', value: 'all', count: counts.all },
+            { label: 'Needs Review', value: 'pending', count: counts.pending },
+            { label: 'Approved', value: 'approved', count: counts.approved },
+            { label: 'Active', value: 'paid', count: counts.paid },
+            { label: 'Rejected', value: 'rejected', count: counts.rejected },
+            { label: 'Archived', value: 'deleted', count: counts.deleted },
+          ] as const).map(({ label, value, count }) => (
             <button
-              key={s}
-              onClick={() => setStatusFilter(s)}
+              key={value}
+              onClick={() => setStatusFilter(value)}
               className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
-                statusFilter === s ? 'border-white text-white' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+                statusFilter === value
+                  ? value === 'deleted' ? 'border-[#CC0000] text-[#CC0000]' : 'border-white text-white'
+                  : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
               }`}
             >
-              {s} ({s === 'all' ? counts.all : counts[s as MembershipStatus]})
+              {label} ({count})
             </button>
           ))}
-          <button
-            onClick={() => setStatusFilter('deleted')}
-            className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
-              statusFilter === 'deleted' ? 'border-[#CC0000] text-[#CC0000]' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
-            }`}
-          >
-            Deleted ({counts.deleted})
-          </button>
         </div>
 
         {/* Tier filter */}
