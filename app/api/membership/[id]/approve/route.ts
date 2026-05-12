@@ -29,7 +29,8 @@ export async function POST(
       .single()
 
     if (error || !data) {
-      return NextResponse.json({ error: 'Update failed' }, { status: 500 })
+      console.error('Approve update error:', error)
+      return NextResponse.json({ error: error?.message ?? 'Update failed — no data returned' }, { status: 500 })
     }
 
     await sendMembershipApproval(data.email, data.full_name, data.membership_tier, payment_link, payment_amount)
