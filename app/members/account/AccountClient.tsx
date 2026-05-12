@@ -7,9 +7,10 @@ import type { User } from '@supabase/supabase-js'
 import type { Member } from '@/lib/types'
 
 const TIER_LABELS: Record<string, string> = {
-  emerging: 'Emerging Member',
-  independent: 'Independent Member',
-  studio: 'Studio Member',
+  emerging_designer: 'Emerging Designer',
+  established_designer: 'Established Designer',
+  signature_designer: 'Signature Designer',
+  curator: 'Curator',
 }
 
 export function AccountClient({ user, member }: { user: User; member: Member | null }) {
@@ -22,9 +23,7 @@ export function AccountClient({ user, member }: { user: User; member: Member | n
     router.refresh()
   }
 
-  const name = member
-    ? [member.first_name, member.last_name].filter(Boolean).join(' ')
-    : user.email
+  const name = member?.full_name ?? user.email
 
   return (
     <div className="px-8 py-12 max-w-2xl mx-auto">
