@@ -22,6 +22,12 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
           >
             Talent
           </Link>
+          <Link
+            href="/admin/membership"
+            className="font-display text-sm tracking-[3px] uppercase text-white hover:text-[#ccc] transition-colors"
+          >
+            Membership
+          </Link>
           <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white border border-[#444] px-3 py-1">
             Admin
           </span>
