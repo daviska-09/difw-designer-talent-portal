@@ -23,17 +23,18 @@ export async function POST(
 
     const { data: rows, error: fetchError } = await service
       .from('membership_applications')
-      .select('*')
+      .select('id, email, full_name, membership_tier, status, airtable_record_id')
       .eq('id', params.id)
 
+    console.log('approve params.id:', params.id, 'rows:', rows?.length, 'fetchError:', fetchError)
+
     if (fetchError) {
-      console.error('Fetch error:', fetchError)
       return NextResponse.json({ error: fetchError.message }, { status: 500 })
     }
 
     const app = rows?.[0]
     if (!app) {
-      return NextResponse.json({ error: 'Application not found' }, { status: 404 })
+      return NextResponse.json({ error: `Application not found for id: ${params.id}` }, { status: 404 })
     }
 
     const { error: updateError } = await service
