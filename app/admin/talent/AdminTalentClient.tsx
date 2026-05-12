@@ -26,6 +26,8 @@ const SERVICE_LABELS: Record<string, string> = {
   other: 'Other',
 }
 
+type FilterStatus = TalentStatus | 'all' | 'deleted'
+
 export function AdminTalentClient({
   initialApplications,
 }: {
@@ -33,7 +35,7 @@ export function AdminTalentClient({
 }) {
   const [applications, setApplications] = useState(initialApplications)
   const [selectedApp, setSelectedApp] = useState<TalentApplication | null>(null)
-  const [statusFilter, setStatusFilter] = useState<TalentStatus | 'all'>('all')
+  const [statusFilter, setStatusFilter] = useState<FilterStatus>('all')
   const [serviceFilter, setServiceFilter] = useState<ServiceType[]>([])
 
   function toggleServiceFilter(s: ServiceType) {
@@ -43,31 +45,45 @@ export function AdminTalentClient({
   }
 
   function handleStatusChange(id: string, status: 'approved' | 'rejected') {
-    setApplications((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, status } : a))
-    )
+    setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)))
     if (selectedApp?.id === id) {
       setSelectedApp((prev) => (prev ? { ...prev, status } : null))
     }
   }
 
+  function handleDelete(id: string) {
+    const now = new Date().toISOString()
+    setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, deleted_at: now } : a)))
+    setSelectedApp(null)
+  }
+
+  function handleRecover(id: string) {
+    setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, deleted_at: null } : a)))
+    setSelectedApp(null)
+  }
+
+  const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
+  const deleted = useMemo(() => applications.filter((a) => !!a.deleted_at), [applications])
+
   const filtered = useMemo(() => {
-    let result = applications
-    if (statusFilter !== 'all') {
-      result = result.filter((a) => a.status === statusFilter)
+    if (statusFilter === 'deleted') {
+      return serviceFilter.length > 0
+        ? deleted.filter((a) => serviceFilter.some((s) => a.services?.includes(s)))
+        : deleted
     }
-    if (serviceFilter.length > 0) {
-      result = result.filter((a) => serviceFilter.some((s) => a.services?.includes(s)))
-    }
+    let result = active
+    if (statusFilter !== 'all') result = result.filter((a) => a.status === statusFilter)
+    if (serviceFilter.length > 0) result = result.filter((a) => serviceFilter.some((s) => a.services?.includes(s)))
     return result
-  }, [applications, statusFilter, serviceFilter])
+  }, [active, deleted, statusFilter, serviceFilter])
 
   const counts = useMemo(() => ({
-    all: applications.length,
-    pending: applications.filter((a) => a.status === 'pending').length,
-    approved: applications.filter((a) => a.status === 'approved').length,
-    rejected: applications.filter((a) => a.status === 'rejected').length,
-  }), [applications])
+    all: active.length,
+    pending: active.filter((a) => a.status === 'pending').length,
+    approved: active.filter((a) => a.status === 'approved').length,
+    rejected: active.filter((a) => a.status === 'rejected').length,
+    deleted: deleted.length,
+  }), [active, deleted])
 
   return (
     <div className="px-8 py-10">
@@ -75,11 +91,11 @@ export function AdminTalentClient({
         {/* Header */}
         <div className="mb-10">
           <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Talent Applications</h1>
-          <p className="text-white text-sm">{applications.length} total submissions</p>
+          <p className="text-white text-sm">{active.length} active · {deleted.length} deleted</p>
         </div>
 
         {/* Status filter */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-3 mb-6 flex-wrap">
           {(['all', ...STATUS_OPTIONS] as const).map((s) => (
             <button
               key={s}
@@ -93,6 +109,16 @@ export function AdminTalentClient({
               {s} {s !== 'all' ? `(${counts[s]})` : `(${counts.all})`}
             </button>
           ))}
+          <button
+            onClick={() => setStatusFilter('deleted')}
+            className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
+              statusFilter === 'deleted'
+                ? 'border-[#CC0000] text-[#CC0000]'
+                : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+            }`}
+          >
+            Deleted ({counts.deleted})
+          </button>
         </div>
 
         {/* Service filter */}
@@ -134,7 +160,7 @@ export function AdminTalentClient({
               <button
                 key={app.id}
                 onClick={() => setSelectedApp(app)}
-                className="w-full grid grid-cols-[2fr_2fr_1fr_1fr_1fr] gap-0 px-6 py-4 border-b border-[#0d0d0d] hover:bg-[#050505] transition-colors text-left"
+                className={`w-full grid grid-cols-[2fr_2fr_1fr_1fr_1fr] gap-0 px-6 py-4 border-b border-[#0d0d0d] hover:bg-[#050505] transition-colors text-left ${app.deleted_at ? 'opacity-50' : ''}`}
               >
                 <div>
                   <p className="text-white text-sm font-medium">
@@ -176,6 +202,8 @@ export function AdminTalentClient({
           application={selectedApp}
           onClose={() => setSelectedApp(null)}
           onStatusChange={handleStatusChange}
+          onDelete={handleDelete}
+          onRecover={handleRecover}
         />
       )}
     </div>

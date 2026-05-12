@@ -18,12 +18,16 @@ interface Props {
   application: TalentApplication
   onClose: () => void
   onStatusChange: (id: string, status: 'approved' | 'rejected') => void
+  onDelete: (id: string) => void
+  onRecover: (id: string) => void
 }
 
-export function TalentDetailPanel({ application: app, onClose, onStatusChange }: Props) {
-  const [loading, setLoading] = useState<'approved' | 'rejected' | null>(null)
+export function TalentDetailPanel({ application: app, onClose, onStatusChange, onDelete, onRecover }: Props) {
+  const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
+
+  const isDeleted = !!app.deleted_at
 
   async function handleAction(status: 'approved' | 'rejected') {
     setLoading(status)
@@ -43,6 +47,35 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
     }
   }
 
+  async function handleDelete() {
+    if (!confirm('Delete this application? It can be recovered later.')) return
+    setLoading('delete')
+    setError(null)
+    try {
+      const res = await fetch(`/api/talent/${app.id}/delete`, { method: 'POST' })
+      if (!res.ok) throw new Error('Failed')
+      onDelete(app.id)
+    } catch {
+      setError('Failed to delete. Try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  async function handleRecover() {
+    setLoading('recover')
+    setError(null)
+    try {
+      const res = await fetch(`/api/talent/${app.id}/recover`, { method: 'POST' })
+      if (!res.ok) throw new Error('Failed')
+      onRecover(app.id)
+    } catch {
+      setError('Failed to recover. Try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
   const name = [app.first_name, app.last_name].filter(Boolean).join(' ')
 
   return (
@@ -57,7 +90,11 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
           <div>
             <p className="font-display text-xl tracking-[2px] uppercase">{name}</p>
             <div className="mt-1">
-              <StatusBadge status={app.status as 'pending' | 'approved' | 'rejected'} />
+              {isDeleted ? (
+                <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#CC0000]">Deleted</span>
+              ) : (
+                <StatusBadge status={app.status as 'pending' | 'approved' | 'rejected'} />
+              )}
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -78,25 +115,43 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
         </div>
 
         {/* Actions */}
-        {app.status === 'pending' && (
-          <div className="px-8 py-6 border-b border-[#1a1a1a] flex gap-4">
-            <Button
-              onClick={() => handleAction('approved')}
-              loading={loading === 'approved'}
-              disabled={!!loading}
-            >
-              Approve
+        <div className="px-8 py-6 border-b border-[#1a1a1a] flex gap-4 flex-wrap">
+          {isDeleted ? (
+            <Button onClick={handleRecover} loading={loading === 'recover'} disabled={!!loading}>
+              Recover
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => handleAction('rejected')}
-              loading={loading === 'rejected'}
-              disabled={!!loading}
-            >
-              Reject
-            </Button>
-          </div>
-        )}
+          ) : (
+            <>
+              {app.status === 'pending' && (
+                <>
+                  <Button
+                    onClick={() => handleAction('approved')}
+                    loading={loading === 'approved'}
+                    disabled={!!loading}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => handleAction('rejected')}
+                    loading={loading === 'rejected'}
+                    disabled={!!loading}
+                  >
+                    Reject
+                  </Button>
+                </>
+              )}
+              <Button
+                variant="outline"
+                onClick={handleDelete}
+                loading={loading === 'delete'}
+                disabled={!!loading}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+        </div>
 
         {error && (
           <div className="px-8 py-4 border-b border-[#1a1a1a]">
@@ -173,6 +228,18 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
               })}
             </span>
           </Field>
+
+          {app.deleted_at && (
+            <Field label="Deleted">
+              <span className="text-[#CC0000] text-sm">
+                {new Date(app.deleted_at).toLocaleDateString('en-IE', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </span>
+            </Field>
+          )}
         </div>
       </div>
     </div>

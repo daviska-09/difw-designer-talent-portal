@@ -108,15 +108,21 @@ function DetailPanel({
   app,
   onClose,
   onStatusChange,
+  onDelete,
+  onRecover,
 }: {
   app: MembershipApplication
   onClose: () => void
   onStatusChange: (id: string, status: MembershipStatus) => void
+  onDelete: (id: string) => void
+  onRecover: (id: string) => void
 }) {
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showApproveModal, setShowApproveModal] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+
+  const isDeleted = !!app.deleted_at
 
   async function handleReject() {
     if (!confirm('Mark this application as rejected? No email will be sent.')) return
@@ -148,10 +154,38 @@ function DetailPanel({
     }
   }
 
+  async function handleDelete() {
+    if (!confirm('Delete this application? It can be recovered later.')) return
+    setLoading('delete')
+    setError(null)
+    try {
+      const res = await fetch(`/api/membership/${app.id}/delete`, { method: 'POST' })
+      if (!res.ok) throw new Error('Failed')
+      onDelete(app.id)
+    } catch {
+      setError('Failed to delete. Try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
+  async function handleRecover() {
+    setLoading('recover')
+    setError(null)
+    try {
+      const res = await fetch(`/api/membership/${app.id}/recover`, { method: 'POST' })
+      if (!res.ok) throw new Error('Failed')
+      onRecover(app.id)
+    } catch {
+      setError('Failed to recover. Try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex">
-        {/* Backdrop — hidden in fullscreen */}
         {!fullscreen && <div className="flex-1 bg-black/60" onClick={onClose} />}
 
         <div className={`bg-black border-l border-[#1a1a1a] overflow-y-auto flex flex-col transition-all ${fullscreen ? 'w-full' : 'w-full max-w-lg'}`}>
@@ -161,7 +195,11 @@ function DetailPanel({
             <div>
               <p className="font-display text-xl tracking-[2px] uppercase">{app.full_name}</p>
               <div className="mt-2 flex items-center gap-3">
-                <StatusBadge status={app.status as MembershipStatus} />
+                {isDeleted ? (
+                  <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#CC0000]">Deleted</span>
+                ) : (
+                  <StatusBadge status={app.status as MembershipStatus} />
+                )}
                 <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">
                   {TIER_LABELS[app.membership_tier as MembershipTier] ?? app.membership_tier}
                 </span>
@@ -181,26 +219,37 @@ function DetailPanel({
 
           {/* Actions */}
           <div className="px-8 py-6 border-b border-[#1a1a1a] flex flex-wrap gap-3">
-            {app.status === 'pending' && (
+            {isDeleted ? (
+              <Button onClick={handleRecover} loading={loading === 'recover'} disabled={!!loading}>
+                Recover
+              </Button>
+            ) : (
               <>
-                <Button onClick={() => setShowApproveModal(true)} disabled={!!loading}>
-                  Approve
-                </Button>
-                <Button variant="outline" onClick={handleReject} loading={loading === 'reject'} disabled={!!loading}>
-                  Reject
+                {app.status === 'pending' && (
+                  <>
+                    <Button onClick={() => setShowApproveModal(true)} disabled={!!loading}>
+                      Approve
+                    </Button>
+                    <Button variant="outline" onClick={handleReject} loading={loading === 'reject'} disabled={!!loading}>
+                      Reject
+                    </Button>
+                  </>
+                )}
+                {app.status === 'approved' && (
+                  <Button onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading}>
+                    Mark as Paid &amp; Activate
+                  </Button>
+                )}
+                {app.status === 'paid' && (
+                  <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500">Account Active</p>
+                )}
+                {app.status === 'rejected' && (
+                  <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Rejected</p>
+                )}
+                <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
+                  Delete
                 </Button>
               </>
-            )}
-            {app.status === 'approved' && (
-              <Button onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading}>
-                Mark as Paid &amp; Activate
-              </Button>
-            )}
-            {app.status === 'paid' && (
-              <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500">Account Active</p>
-            )}
-            {app.status === 'rejected' && (
-              <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Rejected</p>
             )}
           </div>
 
@@ -250,6 +299,13 @@ function DetailPanel({
                 {new Date(app.created_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
             </Field>
+            {app.deleted_at && (
+              <Field label="Deleted">
+                <span className="text-[#CC0000] text-sm">
+                  {new Date(app.deleted_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </span>
+              </Field>
+            )}
           </div>
 
         </div>
@@ -280,10 +336,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 // ── Main Client ───────────────────────────────────────────────
 
+type FilterStatus = MembershipStatus | 'all' | 'deleted'
+
 export function AdminMembershipClient({ initialApplications }: { initialApplications: MembershipApplication[] }) {
   const [applications, setApplications] = useState(initialApplications)
   const [selectedApp, setSelectedApp] = useState<MembershipApplication | null>(null)
-  const [statusFilter, setStatusFilter] = useState<MembershipStatus | 'all'>('all')
+  const [statusFilter, setStatusFilter] = useState<FilterStatus>('all')
   const [tierFilter, setTierFilter] = useState<MembershipTier | 'all'>('all')
 
   function handleStatusChange(id: string, status: MembershipStatus) {
@@ -291,27 +349,45 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
     if (selectedApp?.id === id) setSelectedApp((prev) => (prev ? { ...prev, status } : null))
   }
 
+  function handleDelete(id: string) {
+    const now = new Date().toISOString()
+    setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, deleted_at: now } : a)))
+    setSelectedApp(null)
+  }
+
+  function handleRecover(id: string) {
+    setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, deleted_at: null } : a)))
+    setSelectedApp(null)
+  }
+
+  const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
+  const deleted = useMemo(() => applications.filter((a) => !!a.deleted_at), [applications])
+
   const filtered = useMemo(() => {
-    let result = applications
+    if (statusFilter === 'deleted') {
+      return tierFilter === 'all' ? deleted : deleted.filter((a) => a.membership_tier === tierFilter)
+    }
+    let result = active
     if (statusFilter !== 'all') result = result.filter((a) => a.status === statusFilter)
     if (tierFilter !== 'all') result = result.filter((a) => a.membership_tier === tierFilter)
     return result
-  }, [applications, statusFilter, tierFilter])
+  }, [active, deleted, statusFilter, tierFilter])
 
   const counts = useMemo(() => ({
-    all: applications.length,
-    pending: applications.filter((a) => a.status === 'pending').length,
-    approved: applications.filter((a) => a.status === 'approved').length,
-    rejected: applications.filter((a) => a.status === 'rejected').length,
-    paid: applications.filter((a) => a.status === 'paid').length,
-  }), [applications])
+    all: active.length,
+    pending: active.filter((a) => a.status === 'pending').length,
+    approved: active.filter((a) => a.status === 'approved').length,
+    rejected: active.filter((a) => a.status === 'rejected').length,
+    paid: active.filter((a) => a.status === 'paid').length,
+    deleted: deleted.length,
+  }), [active, deleted])
 
   return (
     <div className="px-8 py-10">
       <div className="max-w-7xl mx-auto">
         <div className="mb-10">
           <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">Membership Applications</h1>
-          <p className="text-white text-sm">{applications.length} total submissions</p>
+          <p className="text-white text-sm">{active.length} active · {deleted.length} deleted</p>
         </div>
 
         {/* Status filter */}
@@ -327,6 +403,14 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
               {s} ({s === 'all' ? counts.all : counts[s as MembershipStatus]})
             </button>
           ))}
+          <button
+            onClick={() => setStatusFilter('deleted')}
+            className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
+              statusFilter === 'deleted' ? 'border-[#CC0000] text-[#CC0000]' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+            }`}
+          >
+            Deleted ({counts.deleted})
+          </button>
         </div>
 
         {/* Tier filter */}
@@ -358,7 +442,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
               <button
                 key={app.id}
                 onClick={() => setSelectedApp(app)}
-                className="w-full grid grid-cols-[2fr_2fr_1fr_1fr_1fr] gap-0 px-6 py-4 border-b border-[#0d0d0d] hover:bg-[#050505] transition-colors text-left"
+                className={`w-full grid grid-cols-[2fr_2fr_1fr_1fr_1fr] gap-0 px-6 py-4 border-b border-[#0d0d0d] hover:bg-[#050505] transition-colors text-left ${app.deleted_at ? 'opacity-50' : ''}`}
               >
                 <div>
                   <p className="text-white text-sm font-medium">{app.full_name}</p>
@@ -385,6 +469,8 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
           app={selectedApp}
           onClose={() => setSelectedApp(null)}
           onStatusChange={handleStatusChange}
+          onDelete={handleDelete}
+          onRecover={handleRecover}
         />
       )}
     </div>

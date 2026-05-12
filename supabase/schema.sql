@@ -127,3 +127,10 @@ create index if not exists talent_applications_status_idx on talent_applications
 create index if not exists talent_applications_email_idx on talent_applications(email);
 create index if not exists membership_applications_status_idx on membership_applications(status);
 create index if not exists membership_applications_email_idx on membership_applications(email);
+
+-- ============================================================
+-- MIGRATION: Soft delete support
+-- Run this in the Supabase SQL Editor if tables already exist
+-- ============================================================
+-- alter table talent_applications add column if not exists deleted_at timestamptz;
+-- alter table membership_applications add column if not exists deleted_at timestamptz;

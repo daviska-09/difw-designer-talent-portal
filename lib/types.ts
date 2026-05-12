@@ -27,6 +27,7 @@ export interface TalentApplication {
   status: TalentStatus
   airtable_record_id: string | null
   created_at: string
+  deleted_at: string | null
 }
 
 export interface MembershipApplication {
@@ -53,6 +54,7 @@ export interface MembershipApplication {
   status: MembershipStatus
   airtable_record_id: string | null
   created_at: string
+  deleted_at: string | null
 }
 
 export interface Member {
