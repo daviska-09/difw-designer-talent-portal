@@ -19,7 +19,6 @@ export async function sendTalentConfirmation(to: string, firstName: string) {
       <p>Hi ${firstName},</p>
       <p>Thanks for applying to the DIFW Talent Database. A member of our team will review your application and be in touch shortly.</p>
       <p>In the meantime, if you have any questions you can reply to this email.</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week</p>
     `),
   })
 }
@@ -35,7 +34,6 @@ export async function sendTalentApproval(to: string, firstName: string) {
       <p>Hi ${firstName},</p>
       <p>Your application to the DIFW Talent Database has been approved. Your profile is now live in our member directory and visible to DIFW members looking for collaborators.</p>
       <p>If you need to update any of your details or portfolio links, reply to this email.</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week</p>
     `),
   })
 }
@@ -51,7 +49,6 @@ export async function sendTalentRejection(to: string, firstName: string) {
       <p>Hi ${firstName},</p>
       <p>Thank you for your interest in the DIFW Talent Database. After reviewing your application, we're unable to move forward at this time.</p>
       <p>We appreciate you taking the time to apply and wish you the best with your work.</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week</p>
     `),
   })
 }
@@ -68,7 +65,6 @@ export async function sendMembershipConfirmation(to: string, firstName: string) 
       <h1>Application Received</h1>
       <p>Hi ${firstName},</p>
       <p>Thanks for applying to become a DIFW member. A member of our team will review your application and be in touch shortly.</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week</p>
     `),
   })
 }
@@ -92,11 +88,10 @@ export async function sendMembershipApproval(
       <h1 style="margin:0 0 32px;">Has Been Approved</h1>
       <p>Congratulations ${firstName}. Your application for DIFW membership has been approved by our team.</p>
       <p>To confirm your membership, please complete your payment using the link below.</p>
-      <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#888;margin:32px 0 16px;">${tierLabel} Membership — ${paymentAmount}</p>
-      <a href="${paymentLink}" style="display:inline-block;background:#fff;color:#000;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;">Complete Payment</a>
+      <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:32px 0 16px;">${tierLabel} Membership — ${paymentAmount}</p>
+      <a href="${paymentLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;">Complete Payment</a>
       <p style="margin-top:40px;">Once your payment is confirmed, you will receive a separate email with access to the DIFW member portal.</p>
-      <p>If you have any questions, contact us at <a href="mailto:info@dublin-ifw.com" style="color:#fff;">info@dublin-ifw.com</a></p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week<br>dublin-ifw.com</p>
+      <p>If you have any questions, contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
 }
@@ -112,7 +107,6 @@ export async function sendMembershipRejection(to: string, firstName: string) {
       <p>Hi ${firstName},</p>
       <p>Thank you for your interest in DIFW membership. After reviewing your application, we're unable to move forward at this time.</p>
       <p>We appreciate your support and hope to connect with you at future DIFW events.</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week</p>
     `),
   })
 }
@@ -133,10 +127,9 @@ export async function sendMemberWelcome(
       <h1 style="margin:0 0 32px;">${firstName}.</h1>
       <p>Your payment has been confirmed and your membership is now active.</p>
       <p>Click the button below to set up your password and access the member portal. This link expires in 24 hours and can only be used once.</p>
-      <a href="${magicLink}" style="display:inline-block;background:#fff;color:#000;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Access Member Portal</a>
+      <a href="${magicLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Access Member Portal</a>
       <p style="margin-top:40px;">Inside the portal you will find:</p>
-      <p style="color:#888;">— The DIFW talent database<br>— Member announcements and articles<br>— Events and industry updates</p>
-      <p style="margin-top:40px;color:#888;">Dublin Independent Fashion Week<br>dublin-ifw.com</p>
+      <p style="color:#555;">— The DIFW talent database<br>— Member announcements and articles<br>— Events and industry updates</p>
     `),
   })
 }
@@ -144,26 +137,36 @@ export async function sendMemberWelcome(
 // ── Shared wrapper ───────────────────────────────────────────
 
 function emailWrapper(body: string): string {
+  const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/logo.webp`
   return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <style>
-    body { margin:0; padding:0; background:#000; color:#fff; font-family:Arial,sans-serif; font-size:15px; line-height:1.6; }
-    .container { max-width:560px; margin:0 auto; padding:48px 32px; }
-    .logo { font-size:11px; letter-spacing:4px; color:#555; text-transform:uppercase; margin-bottom:48px; }
-    h1 { font-size:28px; letter-spacing:2px; text-transform:uppercase; margin:0 0 24px; font-weight:700; }
-    p { color:#ccc; margin:0 0 16px; }
-    strong { color:#fff; }
-    .footer { margin-top:64px; padding-top:24px; border-top:1px solid #1a1a1a; font-size:12px; color:#444; }
+    body { margin:0; padding:0; background:#f4f4f4; color:#000; font-family:Arial,sans-serif; font-size:15px; line-height:1.6; }
+    .outer { background:#f4f4f4; padding:40px 16px; }
+    .container { max-width:560px; margin:0 auto; background:#ffffff; padding:48px 40px; }
+    .logo-wrap { margin-bottom:40px; padding-bottom:32px; border-bottom:1px solid #e5e5e5; }
+    h1 { font-size:26px; letter-spacing:2px; text-transform:uppercase; margin:0 0 20px; font-weight:700; color:#000; }
+    p { color:#333; margin:0 0 16px; }
+    strong { color:#000; }
+    a { color:#000; }
+    .footer { margin-top:48px; padding-top:24px; border-top:1px solid #e5e5e5; font-size:12px; color:#888; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">Dublin Independent Fashion Week</div>
-    ${body}
-    <div class="footer">© Dublin Independent Fashion Week. This email was sent to you because you submitted an application on our platform.</div>
+  <div class="outer">
+    <div class="container">
+      <div class="logo-wrap">
+        <img src="${logoUrl}" alt="Dublin Independent Fashion Week" width="100" style="display:block;" />
+      </div>
+      ${body}
+      <div class="footer">
+        Dublin Independent Fashion Week &nbsp;·&nbsp; dublin-ifw.com<br>
+        © Dublin Independent Fashion Week. This email was sent because you submitted an application on our platform.
+      </div>
+    </div>
   </div>
 </body>
 </html>`

@@ -62,22 +62,7 @@ export async function POST(
       membership_application_id: app.id,
     })
 
-    // Generate magic link for first login
-    const { data: linkData, error: linkError } = await service.auth.admin.generateLink({
-      type: 'magiclink',
-      email: app.email,
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`,
-      },
-    })
-
-    if (linkError || !linkData?.properties?.action_link) {
-      console.error('Magic link generation error:', linkError)
-      return NextResponse.json({ error: 'Failed to generate magic link' }, { status: 500 })
-    }
-
-    await sendMemberWelcome(app.email, app.full_name, linkData.properties.action_link)
-
+    // Update status and Airtable immediately — before email, so these always complete
     await service
       .from('membership_applications')
       .update({ status: 'paid' })
@@ -86,6 +71,21 @@ export async function POST(
     if (app.airtable_record_id) {
       updateMembershipStatusInAirtable(app.airtable_record_id, 'paid').catch(console.error)
     }
+
+    // Generate magic link and send welcome email — non-blocking, failures logged only
+    service.auth.admin.generateLink({
+      type: 'magiclink',
+      email: app.email,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`,
+      },
+    }).then(({ data: linkData, error: linkError }) => {
+      if (linkError || !linkData?.properties?.action_link) {
+        console.error('Magic link generation error:', linkError)
+        return
+      }
+      sendMemberWelcome(app.email, app.full_name, linkData.properties.action_link).catch(console.error)
+    }).catch(console.error)
 
     return NextResponse.json({ success: true })
   } catch (err) {

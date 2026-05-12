@@ -23,6 +23,7 @@ interface Props {
 export function TalentDetailPanel({ application: app, onClose, onStatusChange }: Props) {
   const [loading, setLoading] = useState<'approved' | 'rejected' | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [fullscreen, setFullscreen] = useState(false)
 
   async function handleAction(status: 'approved' | 'rejected') {
     setLoading(status)
@@ -46,11 +47,11 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
 
   return (
     <div className="fixed inset-0 z-50 flex">
-      {/* Backdrop */}
-      <div className="flex-1 bg-black/60" onClick={onClose} />
+      {/* Backdrop — hidden in fullscreen */}
+      {!fullscreen && <div className="flex-1 bg-black/60" onClick={onClose} />}
 
       {/* Panel */}
-      <div className="w-full max-w-lg bg-black border-l border-[#1a1a1a] overflow-y-auto">
+      <div className={`bg-black border-l border-[#1a1a1a] overflow-y-auto flex flex-col transition-all ${fullscreen ? 'w-full' : 'w-full max-w-lg'}`}>
         {/* Header */}
         <div className="flex items-center justify-between px-8 py-6 border-b border-[#1a1a1a] sticky top-0 bg-black z-10">
           <div>
@@ -59,12 +60,21 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange }:
               <StatusBadge status={app.status as 'pending' | 'approved' | 'rejected'} />
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white hover:text-white text-2xl leading-none transition-colors"
-          >
-            ×
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setFullscreen((f) => !f)}
+              className="text-[#666] hover:text-white transition-colors text-2xl font-bold leading-none"
+              title={fullscreen ? 'Collapse' : 'Expand'}
+            >
+              {fullscreen ? '⤡' : '⤢'}
+            </button>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-white text-2xl leading-none transition-colors"
+            >
+              ×
+            </button>
+          </div>
         </div>
 
         {/* Actions */}

@@ -116,6 +116,7 @@ function DetailPanel({
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showApproveModal, setShowApproveModal] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
 
   async function handleReject() {
     if (!confirm('Mark this application as rejected? No email will be sent.')) return
@@ -150,8 +151,10 @@ function DetailPanel({
   return (
     <>
       <div className="fixed inset-0 z-50 flex">
-        <div className="flex-1 bg-black/60" onClick={onClose} />
-        <div className="w-full max-w-lg bg-black border-l border-[#1a1a1a] overflow-y-auto">
+        {/* Backdrop — hidden in fullscreen */}
+        {!fullscreen && <div className="flex-1 bg-black/60" onClick={onClose} />}
+
+        <div className={`bg-black border-l border-[#1a1a1a] overflow-y-auto flex flex-col transition-all ${fullscreen ? 'w-full' : 'w-full max-w-lg'}`}>
 
           {/* Header */}
           <div className="flex items-start justify-between px-8 py-6 border-b border-[#1a1a1a] sticky top-0 bg-black z-10">
@@ -164,7 +167,16 @@ function DetailPanel({
                 </span>
               </div>
             </div>
-            <button onClick={onClose} className="text-white text-2xl leading-none mt-1">×</button>
+            <div className="flex items-center gap-4 mt-1">
+              <button
+                onClick={() => setFullscreen((f) => !f)}
+                className="text-[#666] hover:text-white transition-colors text-2xl font-bold leading-none"
+                title={fullscreen ? 'Collapse' : 'Expand'}
+              >
+                {fullscreen ? '⤡' : '⤢'}
+              </button>
+              <button onClick={onClose} className="text-white text-2xl leading-none">×</button>
+            </div>
           </div>
 
           {/* Actions */}

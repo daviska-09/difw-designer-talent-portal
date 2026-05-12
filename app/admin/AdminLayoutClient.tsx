@@ -12,28 +12,47 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen bg-black">
-      <header className="border-b border-[#1a1a1a] px-8 py-5 flex items-center justify-between">
-        <Logo />
-        <nav className="flex items-center gap-8">
+    <div className="min-h-screen bg-black flex">
+
+      {/* Sidebar */}
+      <aside className="w-52 flex-shrink-0 border-r border-[#1a1a1a] flex flex-col sticky top-0 h-screen">
+        <div className="px-6 py-6 border-b border-[#1a1a1a]">
+          <Logo />
+        </div>
+
+        <nav className="flex flex-col p-4 gap-1 flex-1">
           <Link
             href="/admin/talent"
-            className="font-display text-sm tracking-[3px] uppercase text-white hover:text-[#ccc] transition-colors"
+            className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
+              pathname.startsWith('/admin/talent')
+                ? 'bg-white text-black'
+                : 'text-[#888] hover:text-white hover:bg-[#111]'
+            }`}
           >
             Talent
           </Link>
           <Link
             href="/admin/membership"
-            className="font-display text-sm tracking-[3px] uppercase text-white hover:text-[#ccc] transition-colors"
+            className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
+              pathname.startsWith('/admin/membership')
+                ? 'bg-white text-black'
+                : 'text-[#888] hover:text-white hover:bg-[#111]'
+            }`}
           >
             Membership
           </Link>
-          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white border border-[#444] px-3 py-1">
+        </nav>
+
+        <div className="px-6 py-5 border-t border-[#1a1a1a]">
+          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#444]">
             Admin
           </span>
-        </nav>
-      </header>
-      <main>{children}</main>
+        </div>
+      </aside>
+
+      {/* Content */}
+      <main className="flex-1 overflow-auto">{children}</main>
+
     </div>
   )
 }
