@@ -121,11 +121,11 @@ function DetailPanel({
   const [error, setError] = useState<string | null>(null)
   const [showApproveModal, setShowApproveModal] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const isDeleted = !!app.deleted_at
 
   async function handleReject() {
-    if (!confirm('Mark this application as rejected? No email will be sent.')) return
     setLoading('reject')
     setError(null)
     try {
@@ -140,23 +140,26 @@ function DetailPanel({
   }
 
   async function handleActivate() {
-    if (!confirm('This will create a member account and send the welcome email with portal access link. Continue?')) return
     setLoading('activate')
     setError(null)
     try {
       const res = await fetch(`/api/membership/${app.id}/activate`, { method: 'POST' })
-      if (!res.ok) throw new Error('Failed')
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? 'Failed')
+      if (json.emailSent === false) {
+        setError(`Account activated but welcome email failed: ${json.emailError ?? 'unknown error'}`)
+      }
       onStatusChange(app.id, 'paid')
-    } catch {
-      setError('Failed to activate. Try again.')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to activate. Try again.')
     } finally {
       setLoading(null)
     }
   }
 
   async function handleDelete() {
-    if (!confirm('Delete this application? It can be recovered later.')) return
     setLoading('delete')
+    setConfirmingDelete(false)
     setError(null)
     try {
       const res = await fetch(`/api/membership/${app.id}/delete`, { method: 'POST' })
@@ -241,14 +244,31 @@ function DetailPanel({
                   </Button>
                 )}
                 {app.status === 'paid' && (
-                  <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500">Account Active</p>
+                  <>
+                    <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500 self-center">Account Active</p>
+                    <Button variant="outline" onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading}>
+                      Resend Welcome Email
+                    </Button>
+                  </>
                 )}
                 {app.status === 'rejected' && (
                   <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Rejected</p>
                 )}
-                <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
-                  Delete
-                </Button>
+                {confirmingDelete ? (
+                  <>
+                    <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
+                    <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
+                      Confirm
+                    </Button>
+                    <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
+                    Delete
+                  </Button>
+                )}
               </>
             )}
           </div>

@@ -26,6 +26,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const isDeleted = !!app.deleted_at
 
@@ -48,8 +49,8 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
   }
 
   async function handleDelete() {
-    if (!confirm('Delete this application? It can be recovered later.')) return
     setLoading('delete')
+    setConfirmingDelete(false)
     setError(null)
     try {
       const res = await fetch(`/api/talent/${app.id}/delete`, { method: 'POST' })
@@ -141,14 +142,21 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
                   </Button>
                 </>
               )}
-              <Button
-                variant="outline"
-                onClick={handleDelete}
-                loading={loading === 'delete'}
-                disabled={!!loading}
-              >
-                Delete
-              </Button>
+              {confirmingDelete ? (
+                <>
+                  <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
+                  <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
+                    Confirm
+                  </Button>
+                  <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
+                  Delete
+                </Button>
+              )}
             </>
           )}
         </div>
