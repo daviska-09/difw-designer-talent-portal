@@ -463,17 +463,19 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
         </div>
 
         {/* Tier filter */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          {(['all', ...TIER_OPTIONS] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTierFilter(t)}
-              className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
-                tierFilter === t ? 'border-white text-white' : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
-              }`}
-            >
-              {t === 'all' ? 'All Tiers' : TIER_LABELS[t as MembershipTier]}
-            </button>
+        <div className="flex items-center mb-6">
+          {(['all', ...TIER_OPTIONS] as const).map((t, i) => (
+            <span key={t} className="flex items-center">
+              {i > 0 && <span className="text-[#333] mx-2">·</span>}
+              <button
+                onClick={() => setTierFilter(t)}
+                className={`font-ui text-[11px] tracking-[2px] uppercase transition-colors ${
+                  tierFilter === t ? 'text-white underline' : 'text-[#444] no-underline hover:text-[#888]'
+                }`}
+              >
+                {t === 'all' ? 'All Tiers' : TIER_LABELS[t as MembershipTier]}
+              </button>
+            </span>
           ))}
         </div>
 
