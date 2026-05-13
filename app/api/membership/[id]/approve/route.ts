@@ -47,8 +47,7 @@ export async function POST(
       return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
-    const emailResult = await sendMembershipApproval(app.email, app.full_name, app.membership_tier, payment_link, payment_amount)
-    console.log('Resend result:', JSON.stringify(emailResult))
+    await sendMembershipApproval(app.email, app.full_name, app.membership_tier, payment_link, payment_amount)
 
     if (app.airtable_record_id) {
       updateMembershipStatusInAirtable(app.airtable_record_id, 'approved').catch(console.error)
