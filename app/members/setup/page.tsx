@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Logo } from '@/components/layout/Logo'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
@@ -55,9 +54,6 @@ export default function SetupPage() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      <header className="border-b border-[#1a1a1a] px-8 py-6">
-        <Logo />
-      </header>
       <div className="flex-1 flex items-center justify-center px-8">
         <div className="w-full max-w-sm">
           <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3 text-center">
