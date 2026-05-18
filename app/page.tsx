@@ -31,16 +31,16 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
-            href="/login"
-            className="px-8 py-3 bg-transparent border border-white text-white font-display text-sm tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
-          >
-            Login
-          </Link>
-          <Link
             href="/membership/apply"
             className="px-8 py-3 bg-white text-black font-display text-sm tracking-[3px] uppercase hover:bg-[#e0e0e0] transition-colors"
           >
             Apply for Membership
+          </Link>
+          <Link
+            href="/login"
+            className="px-8 py-3 bg-transparent border border-white text-white font-display text-sm tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
+          >
+            Login
           </Link>
         </div>
 
