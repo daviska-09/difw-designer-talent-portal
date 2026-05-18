@@ -13,14 +13,16 @@ export type ServiceType =
 
 export interface TalentApplication {
   id: string
-  first_name: string
-  last_name: string
+  full_name: string
   business_name: string | null
+  location: string
   email: string
   phone: string | null
+  instagram_website: string | null
   services: ServiceType[]
   services_other: string | null
   portfolio_url: string | null
+  headshot_url: string
   supplementary_url: string | null
   about_me: string
   consent: boolean

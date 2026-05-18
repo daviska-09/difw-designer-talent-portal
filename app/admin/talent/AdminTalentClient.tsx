@@ -163,7 +163,7 @@ export function AdminTalentClient({
               >
                 <div>
                   <p className="text-white text-sm font-medium">
-                    {app.first_name} {app.last_name}
+                    {app.full_name}
                   </p>
                   {app.business_name && (
                     <p className="text-white text-xs mt-0.5">{app.business_name}</p>

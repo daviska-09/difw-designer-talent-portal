@@ -77,7 +77,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
     }
   }
 
-  const name = [app.first_name, app.last_name].filter(Boolean).join(' ')
+  const name = app.full_name
 
   return (
     <div className="fixed inset-0 z-50 flex">
@@ -178,7 +178,13 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
           {app.phone && <Field label="Phone"><span className="text-white text-sm">{app.phone}</span></Field>}
 
           {app.business_name && (
-            <Field label="Business Name"><span className="text-white text-sm">{app.business_name}</span></Field>
+            <Field label="Brand / Organisation"><span className="text-white text-sm">{app.business_name}</span></Field>
+          )}
+
+          <Field label="Location"><span className="text-white text-sm">{app.location}</span></Field>
+
+          {app.instagram_website && (
+            <Field label="Instagram / Website"><span className="text-white text-sm">{app.instagram_website}</span></Field>
           )}
 
           <Field label="Services">
@@ -199,6 +205,17 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
 
           <Field label="About">
             <p className="text-white text-sm leading-relaxed font-light">{app.about_me}</p>
+          </Field>
+
+          <Field label="Headshot">
+            <a
+              href={app.headshot_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-sm hover:text-white transition-colors break-all"
+            >
+              View headshot ↗
+            </a>
           </Field>
 
           {app.portfolio_url && (
@@ -222,7 +239,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
                 rel="noopener noreferrer"
                 className="text-white text-sm hover:text-white transition-colors break-all"
               >
-                {app.supplementary_url}
+                View file ↗
               </a>
             </Field>
           )}

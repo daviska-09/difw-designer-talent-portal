@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Chip } from '@/components/ui/Chip'
@@ -15,19 +15,96 @@ const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
   { value: 'other', label: 'Other' },
 ]
 
+const IMAGE_TYPES = 'image/jpeg,image/png,image/webp'
+const ANY_TYPES = 'image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime,video/webm'
+
+function FileInput({
+  label,
+  hint,
+  required,
+  accept,
+  maxMB,
+  value,
+  onChange,
+}: {
+  label: string
+  hint?: string
+  required?: boolean
+  accept: string
+  maxMB: number
+  value: File | null
+  onChange: (file: File | null) => void
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null
+    if (file && file.size > maxMB * 1024 * 1024) {
+      alert(`File must be under ${maxMB}MB`)
+      e.target.value = ''
+      return
+    }
+    onChange(file)
+  }
+
+  return (
+    <div>
+      <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555] mb-2">
+        {label}{required && ' *'}
+      </p>
+      {hint && <p className="text-xs text-[#888] font-body mb-3">{hint}</p>}
+      <div className="flex items-center gap-4 flex-wrap">
+        <button
+          type="button"
+          onClick={() => ref.current?.click()}
+          className="border border-[#ccc] px-4 py-2 text-xs tracking-[2px] uppercase font-ui hover:border-black transition-colors text-[#555] hover:text-black"
+        >
+          Choose File
+        </button>
+        <span className="text-sm text-[#888] font-body">
+          {value ? value.name : 'No file chosen'}
+        </span>
+        {value && (
+          <button
+            type="button"
+            onClick={() => {
+              onChange(null)
+              if (ref.current) ref.current.value = ''
+            }}
+            className="text-xs text-[#999] hover:text-[#CC0000] transition-colors font-ui tracking-[1px] uppercase"
+          >
+            Remove
+          </button>
+        )}
+      </div>
+      <input
+        ref={ref}
+        type="file"
+        accept={accept}
+        className="hidden"
+        onChange={handleChange}
+      />
+    </div>
+  )
+}
+
 export function TalentApplicationForm() {
   const [services, setServices] = useState<ServiceType[]>([])
   const [fields, setFields] = useState({
-    first_name: '',
-    last_name: '',
+    full_name: '',
     business_name: '',
+    location: '',
     email: '',
     phone: '',
+    instagram_website: '',
     services_other: '',
     portfolio_url: '',
-    supplementary_url: '',
     about_me: '',
     consent: false,
+  })
+  const [files, setFiles] = useState<{ headshot: File | null; supplementary: File | null }>({
+    headshot: null,
+    supplementary: null,
   })
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -43,17 +120,42 @@ export function TalentApplicationForm() {
     setFields((prev) => ({ ...prev, [key]: value }))
   }
 
+  function setFile(key: keyof typeof files, file: File | null) {
+    setFiles((prev) => ({ ...prev, [key]: file }))
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (services.length === 0) {
+      setError('Please select at least one service.')
+      return
+    }
+    if (!files.headshot) {
+      setError('Please upload a headshot.')
+      return
+    }
+
     setLoading(true)
     setError(null)
 
     try {
-      const res = await fetch('/api/talent/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...fields, services }),
-      })
+      const formData = new FormData()
+      formData.append('full_name', fields.full_name)
+      formData.append('business_name', fields.business_name)
+      formData.append('location', fields.location)
+      formData.append('email', fields.email)
+      formData.append('phone', fields.phone)
+      formData.append('instagram_website', fields.instagram_website)
+      formData.append('services', JSON.stringify(services))
+      formData.append('services_other', fields.services_other)
+      formData.append('portfolio_url', fields.portfolio_url)
+      formData.append('about_me', fields.about_me)
+      formData.append('consent', String(fields.consent))
+      formData.append('headshot', files.headshot)
+      if (files.supplementary) formData.append('supplementary', files.supplementary)
+
+      const res = await fetch('/api/talent/apply', { method: 'POST', body: formData })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Submission failed')
       setSuccess(true)
@@ -67,9 +169,15 @@ export function TalentApplicationForm() {
   if (success) {
     return (
       <div className="py-20 text-center">
-        <p className="font-display text-3xl tracking-[3px] uppercase mb-6 text-black">Application Received</p>
-        <p className="text-[#666] max-w-md mx-auto">
-          Thanks for applying to the DIFW Talent Database. A member of our team will review your application and be in touch shortly.
+        <p className="font-display text-3xl tracking-[3px] uppercase mb-6 text-black">
+          Thank You for Your Submission
+        </p>
+        <p className="text-[#555] max-w-md mx-auto leading-relaxed font-body">
+          Submissions to the Talent Database are reviewed on a rolling basis. You can expect to hear back within 5 business days.
+          If you have any questions, please contact{' '}
+          <a href="mailto:info@dublin-ifw.com" className="underline hover:text-black transition-colors">
+            info@dublin-ifw.com
+          </a>
         </p>
       </div>
     )
@@ -77,34 +185,34 @@ export function TalentApplicationForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
-      {/* Name row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <Input
-          label="First Name *"
-          value={fields.first_name}
-          onChange={(e) => set('first_name', e.target.value)}
-          required
-          placeholder="Aoife"
-        />
-        <Input
-          label="Last Name *"
-          value={fields.last_name}
-          onChange={(e) => set('last_name', e.target.value)}
-          required
-          placeholder="Murphy"
-        />
-      </div>
+
+      {/* ── Personal Info ── */}
+      <Input
+        label="Full Name *"
+        value={fields.full_name}
+        onChange={(e) => set('full_name', e.target.value)}
+        required
+        placeholder="Your full name"
+      />
 
       <Input
-        label="Business / Studio Name"
+        label="Brand / Organisation Name"
         value={fields.business_name}
         onChange={(e) => set('business_name', e.target.value)}
-        placeholder="Optional"
+        placeholder="If applicable"
+      />
+
+      <Input
+        label="Location *"
+        value={fields.location}
+        onChange={(e) => set('location', e.target.value)}
+        required
+        placeholder="City, Country"
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         <Input
-          label="Email *"
+          label="Email Address *"
           type="email"
           value={fields.email}
           onChange={(e) => set('email', e.target.value)}
@@ -112,19 +220,28 @@ export function TalentApplicationForm() {
           placeholder="you@example.com"
         />
         <Input
-          label="Phone"
+          label="Phone Number *"
           type="tel"
           value={fields.phone}
           onChange={(e) => set('phone', e.target.value)}
+          required
           placeholder="+353 87 000 0000"
         />
       </div>
 
-      {/* Services */}
+      <Input
+        label="Instagram / Website"
+        value={fields.instagram_website}
+        onChange={(e) => set('instagram_website', e.target.value)}
+        placeholder="@yourbrand or https://yourwebsite.com"
+      />
+
+      {/* ── Services ── */}
       <div>
-        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555] mb-4">
-          Services Offered *
+        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555] mb-2">
+          Services *
         </p>
+        <p className="text-xs text-[#888] font-body mb-4">Check all that apply</p>
         <div className="flex flex-wrap gap-3">
           {SERVICE_OPTIONS.map((opt) => (
             <Chip
@@ -140,7 +257,7 @@ export function TalentApplicationForm() {
         {services.includes('other') && (
           <div className="mt-6">
             <Input
-              label="Please Elaborate"
+              label="If you selected Other, please elaborate"
               value={fields.services_other}
               onChange={(e) => set('services_other', e.target.value)}
               placeholder="Describe your service"
@@ -149,22 +266,42 @@ export function TalentApplicationForm() {
         )}
       </div>
 
-      <Input
-        label="Portfolio Link"
-        type="url"
-        value={fields.portfolio_url}
-        onChange={(e) => set('portfolio_url', e.target.value)}
-        placeholder="https://yourportfolio.com"
-      />
+      {/* ── Links / Uploads ── */}
+      <div className="space-y-8">
+        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555]">
+          Links / Uploads
+        </p>
 
-      <Input
-        label="Supplementary Material"
-        type="url"
-        value={fields.supplementary_url}
-        onChange={(e) => set('supplementary_url', e.target.value)}
-        placeholder="Google Drive / Dropbox / WeTransfer link"
-      />
+        <Input
+          label="Portfolio Link *"
+          type="url"
+          value={fields.portfolio_url}
+          onChange={(e) => set('portfolio_url', e.target.value)}
+          required
+          placeholder="http://"
+        />
 
+        <FileInput
+          label="Headshot"
+          hint="JPG, PNG or WebP — max 10MB"
+          required
+          accept={IMAGE_TYPES}
+          maxMB={10}
+          value={files.headshot}
+          onChange={(f) => setFile('headshot', f)}
+        />
+
+        <FileInput
+          label="Supplementary Material"
+          hint="Upload any additional portfolio material — image, PDF or video, max 50MB"
+          accept={ANY_TYPES}
+          maxMB={50}
+          value={files.supplementary}
+          onChange={(f) => setFile('supplementary', f)}
+        />
+      </div>
+
+      {/* ── About Me ── */}
       <Textarea
         label="About Me *"
         hint="Write something that helps our members understand your work and how you collaborate."
@@ -175,6 +312,7 @@ export function TalentApplicationForm() {
         placeholder="Tell us about your practice, your approach, and the kinds of projects you love..."
       />
 
+      {/* ── Agreement ── */}
       <div className="border-t border-[#E5E5E5] pt-8">
         <label className="flex gap-4 cursor-pointer group">
           <input
@@ -184,18 +322,18 @@ export function TalentApplicationForm() {
             onChange={(e) => set('consent', e.target.checked)}
             required
           />
-          <span className="text-sm text-[#555] group-hover:text-[#333] transition-colors leading-relaxed">
+          <span className="text-sm text-[#555] group-hover:text-[#333] transition-colors leading-relaxed font-body">
             By submitting this form, you confirm that you are happy for DIFW to share your details and portfolio with our members for the purpose of collaboration opportunities.
           </span>
         </label>
       </div>
 
       {error && (
-        <p className="text-[#CC0000] text-sm border border-[#CC0000] border-opacity-30 px-4 py-3">{error}</p>
+        <p className="text-[#CC0000] text-sm border border-[#CC0000]/30 px-4 py-3">{error}</p>
       )}
 
       <Button type="submit" variant="dark" loading={loading} className="w-full sm:w-auto">
-        Submit Application
+        Submit
       </Button>
     </form>
   )

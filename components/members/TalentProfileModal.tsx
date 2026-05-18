@@ -17,7 +17,7 @@ interface Props {
 
 export function TalentProfileModal({ talent, onClose }: Props) {
   if (!talent) return null
-  const name = [talent.first_name, talent.last_name].filter(Boolean).join(' ')
+  const name = talent.full_name
 
   return (
     <Modal open={!!talent} onClose={onClose} title={name}>

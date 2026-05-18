@@ -24,7 +24,7 @@ export async function PATCH(
 
     const { data: rows, error: fetchError } = await service
       .from('talent_applications')
-      .select('email, first_name, airtable_record_id')
+      .select('email, full_name, airtable_record_id')
       .eq('id', params.id)
 
     const app = rows?.[0]
@@ -48,9 +48,9 @@ export async function PATCH(
 
     // Send email
     if (status === 'approved') {
-      sendTalentApproval(app.email, app.first_name).catch(console.error)
+      sendTalentApproval(app.email, app.full_name).catch(console.error)
     } else {
-      sendTalentRejection(app.email, app.first_name).catch(console.error)
+      sendTalentRejection(app.email, app.full_name).catch(console.error)
     }
 
     return NextResponse.json({ success: true })

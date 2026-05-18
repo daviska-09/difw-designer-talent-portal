@@ -8,22 +8,24 @@ const REPLY_TO = 'hello@dublinfashionweek.ie'
 
 // ── Talent emails ────────────────────────────────────────────
 
-export async function sendTalentConfirmation(to: string, firstName: string) {
+export async function sendTalentConfirmation(to: string, fullName: string) {
+  const firstName = fullName.split(' ')[0]
   return getResend().emails.send({
     from: FROM,
     replyTo: REPLY_TO,
     to,
-    subject: 'DIFW Talent Database — Application Received',
+    subject: 'DIFW Talent Database — Submission Received',
     html: emailWrapper(`
-      <h1>Application Received</h1>
+      <h1>Submission Received</h1>
       <p>Hi ${firstName},</p>
-      <p>Thanks for applying to the DIFW Talent Database. A member of our team will review your application and be in touch shortly.</p>
-      <p>In the meantime, if you have any questions you can reply to this email.</p>
+      <p>Thank you for your submission to the DIFW Talent Database. Submissions are reviewed on a rolling basis and you can expect to hear back within 5 business days.</p>
+      <p>If you have any questions in the meantime, please contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
 }
 
-export async function sendTalentApproval(to: string, firstName: string) {
+export async function sendTalentApproval(to: string, fullName: string) {
+  const firstName = fullName.split(' ')[0]
   return getResend().emails.send({
     from: FROM,
     replyTo: REPLY_TO,
@@ -32,13 +34,14 @@ export async function sendTalentApproval(to: string, firstName: string) {
     html: emailWrapper(`
       <h1>You're In</h1>
       <p>Hi ${firstName},</p>
-      <p>Your application to the DIFW Talent Database has been approved. Your profile is now live in our member directory and visible to DIFW members looking for collaborators.</p>
-      <p>If you need to update any of your details or portfolio links, reply to this email.</p>
+      <p>Your submission to the DIFW Talent Database has been approved. Your profile is now visible to DIFW members when they are selecting creatives to work with.</p>
+      <p>If you need to update any of your details or portfolio links, reply to this email or contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
 }
 
-export async function sendTalentRejection(to: string, firstName: string) {
+export async function sendTalentRejection(to: string, fullName: string) {
+  const firstName = fullName.split(' ')[0]
   return getResend().emails.send({
     from: FROM,
     replyTo: REPLY_TO,
@@ -47,7 +50,7 @@ export async function sendTalentRejection(to: string, firstName: string) {
     html: emailWrapper(`
       <h1>Application Update</h1>
       <p>Hi ${firstName},</p>
-      <p>Thank you for your interest in the DIFW Talent Database. After reviewing your application, we're unable to move forward at this time.</p>
+      <p>Thank you for your interest in the DIFW Talent Database. After reviewing your submission, we're unable to move forward at this time.</p>
       <p>We appreciate you taking the time to apply and wish you the best with your work.</p>
     `),
   })

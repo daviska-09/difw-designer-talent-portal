@@ -37,7 +37,7 @@ export function TalentDirectoryClient({
       const q = search.toLowerCase()
       result = result.filter(
         (t) =>
-          `${t.first_name} ${t.last_name}`.toLowerCase().includes(q) ||
+          t.full_name.toLowerCase().includes(q) ||
           t.business_name?.toLowerCase().includes(q) ||
           t.about_me?.toLowerCase().includes(q)
       )
@@ -54,7 +54,7 @@ export function TalentDirectoryClient({
 
   return (
     <div className="px-8 py-12">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-12">
           <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3">
@@ -105,11 +105,9 @@ export function TalentDirectoryClient({
             No profiles match your search.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[#111]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
             {filtered.map((talent) => (
-              <div key={talent.id} className="bg-black">
-                <TalentCard talent={talent} onClick={() => setSelected(talent)} />
-              </div>
+              <TalentCard key={talent.id} talent={talent} onClick={() => setSelected(talent)} />
             ))}
           </div>
         )}

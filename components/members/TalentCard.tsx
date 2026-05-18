@@ -15,42 +15,36 @@ interface TalentCardProps {
 }
 
 export function TalentCard({ talent, onClick }: TalentCardProps) {
-  const name = [talent.first_name, talent.last_name].filter(Boolean).join(' ')
-  const bio = talent.about_me?.slice(0, 120) + (talent.about_me?.length > 120 ? '...' : '')
-
   return (
     <button
       onClick={onClick}
-      className="text-left w-full border border-[#1a1a1a] p-6 hover:border-[#555] transition-colors group"
+      className="text-left w-full bg-white p-4 group hover:opacity-90 transition-opacity"
     >
-      <div className="flex flex-wrap gap-2 mb-4">
+      {/* Headshot with black border frame */}
+      <div className="border-2 border-black aspect-[4/5] overflow-hidden mb-4 w-full">
+        <img
+          src={talent.headshot_url}
+          alt={talent.full_name}
+          className="w-full h-full object-cover object-top"
+        />
+      </div>
+
+      {/* Full name */}
+      <p className="font-display text-2xl tracking-[2px] uppercase text-black leading-tight mb-2">
+        {talent.full_name}
+      </p>
+
+      {/* Service tags — solid black pill(s) */}
+      <div className="flex flex-wrap gap-1">
         {(talent.services ?? []).map((s) => (
           <span
             key={s}
-            className="text-xs tracking-[2px] uppercase font-ui font-semibold border border-[#555] px-2 py-1 text-white"
+            className="bg-black text-white text-xs tracking-[2px] uppercase font-ui font-semibold px-2 py-1"
           >
             {SERVICE_LABELS[s] ?? s}
           </span>
         ))}
       </div>
-
-      <p className="font-display text-xl tracking-[2px] uppercase mb-1 group-hover:text-white transition-colors text-white">
-        {name}
-      </p>
-
-      {talent.business_name && (
-        <p className="text-xs text-white font-ui tracking-[1px] uppercase mb-3">
-          {talent.business_name}
-        </p>
-      )}
-
-      <p className="text-sm text-white leading-relaxed font-body font-light">{bio}</p>
-
-      {talent.portfolio_url && (
-        <p className="mt-4 text-xs tracking-[2px] uppercase font-ui font-semibold text-[#444] group-hover:text-white transition-colors">
-          View Portfolio →
-        </p>
-      )}
     </button>
   )
 }

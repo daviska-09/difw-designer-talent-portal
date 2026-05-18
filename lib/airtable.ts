@@ -13,14 +13,16 @@ function getBase() {
 export async function syncTalentToAirtable(app: TalentApplication): Promise<string | null> {
   try {
     const record = await getBase()(TALENT_TABLE).create({
-      'First Name': app.first_name,
-      'Last Name': app.last_name,
+      'Full Name': app.full_name,
       'Business Name': app.business_name ?? '',
+      'Location': app.location,
       'Email': app.email,
       'Phone': app.phone ?? '',
+      'Instagram / Website': app.instagram_website ?? '',
       'Services': (app.services ?? []).join(', '),
       'Services Other': app.services_other ?? '',
       'Portfolio URL': app.portfolio_url ?? '',
+      'Headshot URL': app.headshot_url,
       'Supplementary URL': app.supplementary_url ?? '',
       'About Me': app.about_me,
       'Status': app.status,

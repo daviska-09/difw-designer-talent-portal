@@ -2,7 +2,7 @@ import { Logo } from '@/components/layout/Logo'
 import { TalentApplicationForm } from '@/components/forms/TalentApplicationForm'
 
 export const metadata = {
-  title: 'Apply — DIFW Talent Database',
+  title: 'Talent Database — DIFW',
 }
 
 export default function TalentApplyPage() {
@@ -30,10 +30,10 @@ export default function TalentApplyPage() {
               Talent
             </h1>
             <h2 className="font-display text-4xl sm:text-5xl tracking-[3px] uppercase mb-6 text-white">
-              Apply
+              Database
             </h2>
             <p className="text-white/75 leading-relaxed max-w-lg">
-              Join the DIFW Talent Database and get discovered by our network of independent designers and brands. Approved profiles are visible to all DIFW members.
+              Submit your information and portfolio below to become part of our community and connect with designers. Your portfolio is an important part of your application, as it will be shared with our members when they are selecting creatives to work with.
             </p>
           </div>
         </div>
