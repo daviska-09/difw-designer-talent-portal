@@ -16,16 +16,16 @@ export default function HomePage() {
         </nav>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-8 py-8 text-center">
+      <main className="flex-1 flex flex-col items-center justify-center px-8 py-4 text-center">
         <img
           src="/logo.webp"
           alt="Dublin Independent Fashion Week"
-          className="w-48 sm:w-64 mb-6"
+          className="w-32 sm:w-44 mb-4"
         />
-        <h1 className="font-display text-5xl sm:text-7xl tracking-[4px] uppercase mb-4 text-white">
+        <h1 className="font-display text-4xl sm:text-5xl tracking-[4px] uppercase mb-3 text-white">
           DIFW Portal
         </h1>
-        <p className="text-white mb-8 max-w-sm leading-relaxed text-sm">
+        <p className="text-white mb-6 max-w-sm leading-relaxed text-sm">
           Member and talent management portal for the Dublin Independent Fashion Week community.
         </p>
 
