@@ -16,7 +16,7 @@ export function MemberNav() {
 
   return (
     <header className="border-b border-[#1a1a1a] px-8 py-5 flex items-center justify-between">
-      <Logo href="/members/talent" />
+      <Logo href="/" />
       <nav className="flex items-center gap-8">
         {NAV_LINKS.map((link) => (
           <Link
