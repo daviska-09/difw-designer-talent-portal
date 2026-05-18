@@ -8,12 +8,6 @@ export default function HomePage() {
         <Logo />
         <nav className="flex items-center gap-8">
           <Link
-            href="/login"
-            className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-[#ccc] transition-colors"
-          >
-            Member Login
-          </Link>
-          <Link
             href="/admin/login"
             className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-[#ccc] transition-colors"
           >
@@ -37,14 +31,14 @@ export default function HomePage() {
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Link
-            href="/talent/apply"
-            className="px-8 py-3 bg-white text-black font-display text-sm tracking-[3px] uppercase hover:bg-[#e0e0e0] transition-colors"
+            href="/login"
+            className="px-8 py-3 bg-transparent border border-white text-white font-display text-sm tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
           >
-            Join Talent Database
+            Login
           </Link>
           <Link
             href="/membership/apply"
-            className="px-8 py-3 bg-transparent border border-white text-white font-display text-sm tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
+            className="px-8 py-3 bg-white text-black font-display text-sm tracking-[3px] uppercase hover:bg-[#e0e0e0] transition-colors"
           >
             Apply for Membership
           </Link>
