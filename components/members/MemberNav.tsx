@@ -6,8 +6,7 @@ import { Logo } from '@/components/layout/Logo'
 
 const NAV_LINKS = [
   { href: '/members/talent', label: 'Talent' },
-  { href: '/members/events', label: 'Events' },
-  { href: '/members/announcements', label: 'Announcements' },
+  { href: '/members/announcements', label: 'Events & Announcements' },
   { href: '/members/account', label: 'Account' },
 ]
 
