@@ -105,7 +105,7 @@ export function TalentDirectoryClient({
             No profiles match your search.
           </p>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 xl:grid-cols-6 gap-4">
             {filtered.map((talent) => (
               <TalentCard key={talent.id} talent={talent} onClick={() => setSelected(talent)} />
             ))}

@@ -18,10 +18,10 @@ export function TalentCard({ talent, onClick }: TalentCardProps) {
   return (
     <button
       onClick={onClick}
-      className="text-left w-full bg-white p-4 group hover:opacity-90 transition-opacity"
+      className="text-left w-full bg-white p-2 group hover:opacity-90 transition-opacity"
     >
       {/* Headshot with black border frame */}
-      <div className="border-2 border-black aspect-[4/5] overflow-hidden mb-4 w-full">
+      <div className="border border-black aspect-[4/5] overflow-hidden mb-2 w-full">
         <img
           src={talent.headshot_url}
           alt={talent.full_name}
@@ -30,7 +30,7 @@ export function TalentCard({ talent, onClick }: TalentCardProps) {
       </div>
 
       {/* Full name */}
-      <p className="font-display text-2xl tracking-[2px] uppercase text-black leading-tight mb-2">
+      <p className="font-display text-sm tracking-[1px] uppercase text-black leading-tight mb-1">
         {talent.full_name}
       </p>
 
@@ -39,7 +39,7 @@ export function TalentCard({ talent, onClick }: TalentCardProps) {
         {(talent.services ?? []).map((s) => (
           <span
             key={s}
-            className="bg-black text-white text-xs tracking-[2px] uppercase font-ui font-semibold px-2 py-1"
+            className="bg-black text-white text-[10px] tracking-[1px] uppercase font-ui font-semibold px-1.5 py-0.5"
           >
             {SERVICE_LABELS[s] ?? s}
           </span>
