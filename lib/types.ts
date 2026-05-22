@@ -59,6 +59,20 @@ export interface MembershipApplication {
   deleted_at: string | null
 }
 
+export interface Post {
+  id: string
+  headline: string
+  body_text: string
+  feature_photo_url: string | null
+  hyperlink: string | null
+  published_at: string
+  created_at: string
+  updated_at: string
+  is_published: boolean
+  admin_id: string | null
+  airtable_record_id: string | null
+}
+
 export interface Member {
   id: string
   full_name: string | null

@@ -1,8 +1,9 @@
 import Airtable from 'airtable'
-import type { TalentApplication, MembershipApplication } from './types'
+import type { TalentApplication, MembershipApplication, Post } from './types'
 
 const TALENT_TABLE = 'Talent Submissions'
 const MEMBERSHIP_TABLE = 'Membership Applications'
+const POSTS_TABLE = 'Announcements'
 
 function getBase() {
   return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
@@ -84,6 +85,43 @@ export async function updateMembershipStatusInAirtable(
     await getBase()(MEMBERSHIP_TABLE).update(airtableRecordId, { Status: status })
   } catch (err) {
     console.error('Airtable status update failed (membership):', err)
+  }
+}
+
+export async function syncPostToAirtable(post: Post): Promise<string | null> {
+  try {
+    const record = await getBase()(POSTS_TABLE).create({
+      'Headline': post.headline,
+      'Body': post.body_text,
+      'Photo URL': post.feature_photo_url ?? '',
+      'Link': post.hyperlink ?? '',
+      'Published Date': post.published_at,
+      'Status': post.is_published ? 'Published' : 'Draft',
+      'Supabase ID': post.id,
+    })
+    return record.id
+  } catch (err) {
+    console.error('Airtable sync failed (post):', err)
+    return null
+  }
+}
+
+export async function updatePostInAirtable(
+  airtableRecordId: string,
+  fields: Record<string, string | boolean>
+): Promise<void> {
+  try {
+    await getBase()(POSTS_TABLE).update(airtableRecordId, fields)
+  } catch (err) {
+    console.error('Airtable post update failed:', err)
+  }
+}
+
+export async function deletePostFromAirtable(airtableRecordId: string): Promise<void> {
+  try {
+    await getBase()(POSTS_TABLE).destroy(airtableRecordId)
+  } catch (err) {
+    console.error('Airtable post delete failed:', err)
   }
 }
 

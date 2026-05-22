@@ -49,6 +49,22 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
           >
             Membership
           </Link>
+
+          <div className="mt-4 mb-1 px-4">
+            <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#2a2a2a]">
+              Content
+            </span>
+          </div>
+          <Link
+            href="/admin/posts"
+            className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
+              pathname.startsWith('/admin/posts')
+                ? 'bg-white text-black'
+                : 'text-[#888] hover:text-white hover:bg-[#111]'
+            }`}
+          >
+            Posts
+          </Link>
         </nav>
 
         <div className="px-4 py-4 border-t border-[#1a1a1a] flex flex-col gap-1">
