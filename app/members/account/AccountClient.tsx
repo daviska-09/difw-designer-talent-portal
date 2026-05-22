@@ -13,7 +13,7 @@ const TIER_LABELS: Record<string, string> = {
   curator: 'Curator',
 }
 
-export function AccountClient({ user, member }: { user: User; member: Member | null }) {
+export function AccountClient({ user, member, headshotUrl }: { user: User; member: Member | null; headshotUrl: string | null }) {
   const router = useRouter()
 
   async function handleLogout() {
@@ -31,6 +31,19 @@ export function AccountClient({ user, member }: { user: User; member: Member | n
         Member Area
       </p>
       <h1 className="font-display text-4xl tracking-[3px] uppercase mb-12">Account</h1>
+
+      {headshotUrl && (
+        <div className="mb-12">
+          <div className="w-32 h-32 border border-white overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={headshotUrl}
+              alt={member?.full_name ?? 'Profile photo'}
+              className="w-full h-full object-cover object-top"
+            />
+          </div>
+        </div>
+      )}
 
       <div className="border-t border-[#1a1a1a] pt-8 space-y-8">
         <div>
