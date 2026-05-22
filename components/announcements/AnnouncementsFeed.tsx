@@ -23,21 +23,9 @@ function PostCard({ post, onClick }: { post: Post; onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left border border-white hover:bg-[#050505] transition-colors group"
+      className="w-full text-left border border-white hover:bg-[#050505] transition-colors group flex items-stretch"
     >
-      {/* Feature photo */}
-      {post.feature_photo_url && (
-        <div className="w-full aspect-video bg-[#111] overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={post.feature_photo_url}
-            alt={post.headline}
-            className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
-          />
-        </div>
-      )}
-
-      <div className="p-6">
+      <div className="flex-1 p-6">
         {/* Date */}
         <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
           {new Date(post.published_at).toLocaleDateString('en-IE', {
@@ -60,6 +48,18 @@ function PostCard({ post, onClick }: { post: Post; onClick: () => void }) {
           )}
         </p>
       </div>
+
+      {/* Feature photo — fixed-size thumbnail on the right */}
+      {post.feature_photo_url && (
+        <div className="w-40 h-40 flex-shrink-0 bg-[#111] overflow-hidden self-stretch">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={post.feature_photo_url}
+            alt=""
+            className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
+          />
+        </div>
+      )}
     </button>
   )
 }
