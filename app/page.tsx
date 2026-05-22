@@ -9,7 +9,7 @@ export default function HomePage() {
         <nav className="flex items-center gap-8">
           <Link
             href="/admin/login"
-            className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-[#ccc] transition-colors"
+            className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors"
           >
             Admin
           </Link>

@@ -40,7 +40,7 @@ export function Modal({ open, onClose, children, title }: ModalProps) {
           )}
           <button
             onClick={onClose}
-            className="ml-auto text-white hover:text-[#ccc] text-xl leading-none transition-colors"
+            className="ml-auto text-white hover:text-white text-xl leading-none transition-colors"
             aria-label="Close"
           >
             ×

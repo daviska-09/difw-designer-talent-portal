@@ -15,7 +15,7 @@ export function Chip({ label, active = false, light = false, onClick, className 
       : 'border-[#ccc] text-[#888] hover:border-[#888] hover:text-[#555]'
     : active
       ? 'border-white text-white'
-      : 'border-[#555] text-white hover:border-white hover:text-white'
+      : 'border-white text-white hover:border-white hover:text-white'
 
   return (
     <button

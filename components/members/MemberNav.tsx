@@ -22,7 +22,7 @@ export function MemberNav() {
             key={link.href}
             href={link.href}
             className={`font-display text-sm tracking-[3px] uppercase transition-colors ${
-              pathname === link.href ? 'text-white' : 'text-[#888] hover:text-white'
+              pathname === link.href ? 'text-white' : 'text-white hover:text-white'
             }`}
           >
             {link.label}

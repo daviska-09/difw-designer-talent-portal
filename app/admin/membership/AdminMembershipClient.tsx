@@ -59,12 +59,12 @@ function ApproveModal({
         <div className="flex items-start justify-between mb-8">
           <div>
             <p className="font-display text-xl tracking-[2px] uppercase">Approve Application</p>
-            <p className="text-[#888] text-sm mt-1">{app.full_name}</p>
+            <p className="text-white text-sm mt-1">{app.full_name}</p>
           </div>
           <button onClick={onClose} className="text-white text-2xl leading-none">×</button>
         </div>
 
-        <p className="text-[#888] text-sm mb-8 leading-relaxed">
+        <p className="text-white text-sm mb-8 leading-relaxed">
           Enter the payment details. An approval email with a payment button will be sent to the applicant immediately.
         </p>
 
@@ -210,7 +210,7 @@ function DetailPanel({
             <div className="flex items-center gap-4 mt-1">
               <button
                 onClick={() => setFullscreen((f) => !f)}
-                className="text-[#666] hover:text-white transition-colors text-2xl font-bold leading-none"
+                className="text-white hover:text-white transition-colors text-2xl font-bold leading-none"
                 title={fullscreen ? 'Collapse' : 'Expand'}
               >
                 {fullscreen ? '⤡' : '⤢'}
@@ -248,11 +248,11 @@ function DetailPanel({
                       <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-emerald-500">Account Active</p>
                       {confirmingDelete ? (
                         <div className="flex items-center gap-2">
-                          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Delete?</span>
+                          <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">Delete?</span>
                           <button onClick={handleDelete} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold px-3 py-1 bg-[#CC0000] text-white disabled:opacity-40">
                             Confirm
                           </button>
-                          <button onClick={() => setConfirmingDelete(false)} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] hover:text-white transition-colors">
+                          <button onClick={() => setConfirmingDelete(false)} disabled={!!loading} className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors">
                             Cancel
                           </button>
                         </div>
@@ -268,12 +268,12 @@ function DetailPanel({
                   </div>
                 )}
                 {app.status === 'rejected' && (
-                  <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888]">Rejected</p>
+                  <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">Rejected</p>
                 )}
                 {app.status !== 'paid' && (
                   confirmingDelete ? (
                     <>
-                      <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
+                      <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white self-center">Delete?</span>
                       <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
                         Confirm
                       </Button>
@@ -302,13 +302,13 @@ function DetailPanel({
             <Field label="Brand">{app.brand_name}</Field>
             <Field label="Location">{app.location}</Field>
             <Field label="Email">
-              <a href={`mailto:${app.email}`} className="text-white text-sm hover:text-[#ccc] transition-colors">{app.email}</a>
+              <a href={`mailto:${app.email}`} className="text-white text-sm hover:text-white transition-colors">{app.email}</a>
             </Field>
             <Field label="Phone">{app.phone}</Field>
             {app.instagram && <Field label="Instagram">{app.instagram}</Field>}
             {app.website_url && (
               <Field label="Website">
-                <a href={app.website_url} target="_blank" rel="noopener noreferrer" className="text-white text-sm hover:text-[#ccc] transition-colors break-all">{app.website_url}</a>
+                <a href={app.website_url} target="_blank" rel="noopener noreferrer" className="text-white text-sm hover:text-white transition-colors break-all">{app.website_url}</a>
               </Field>
             )}
             <Field label="DIFW26">
@@ -322,13 +322,13 @@ function DetailPanel({
             </Field>
             <Field label="Uploads">
               <div className="flex flex-wrap gap-4 mt-1">
-                <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-[#333] px-3 py-1.5 hover:border-white transition-colors">Headshot</a>
-                <a href={app.logo_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-[#333] px-3 py-1.5 hover:border-white transition-colors">Logo</a>
+                <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Headshot</a>
+                <a href={app.logo_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Logo</a>
                 {app.emerging_proof_url && (
-                  <a href={app.emerging_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-[#333] px-3 py-1.5 hover:border-white transition-colors">Eligibility Proof</a>
+                  <a href={app.emerging_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Eligibility Proof</a>
                 )}
                 {app.supporting_docs_url && (
-                  <a href={app.supporting_docs_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-[#333] px-3 py-1.5 hover:border-white transition-colors">Supporting Docs</a>
+                  <a href={app.supporting_docs_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Supporting Docs</a>
                 )}
               </div>
             </Field>
@@ -453,7 +453,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
               className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
                 statusFilter === value
                   ? value === 'deleted' ? 'border-[#CC0000] text-[#CC0000]' : 'border-white text-white'
-                  : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+                  : 'border-white text-white hover:border-white hover:text-white'
               }`}
             >
               {label} ({count})
@@ -465,11 +465,11 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
         <div className="flex items-center mb-6">
           {(['all', ...TIER_OPTIONS] as const).map((t, i) => (
             <span key={t} className="flex items-center">
-              {i > 0 && <span className="text-[#333] mx-2">·</span>}
+              {i > 0 && <span className="text-white mx-2">·</span>}
               <button
                 onClick={() => setTierFilter(t)}
                 className={`font-ui text-[11px] tracking-[2px] uppercase transition-colors ${
-                  tierFilter === t ? 'text-white underline' : 'text-[#444] no-underline hover:text-[#888]'
+                  tierFilter === t ? 'text-white underline' : 'text-white no-underline hover:text-white'
                 }`}
               >
                 {t === 'all' ? 'All Tiers' : TIER_LABELS[t as MembershipTier]}
@@ -485,12 +485,12 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search applications..."
-            className="w-full bg-transparent border-b border-[#333] text-white font-body text-sm py-2 pr-8 placeholder:text-[#555] placeholder:tracking-[1px] placeholder:uppercase focus:outline-none focus:border-[#666] transition-colors"
+            className="w-full bg-transparent border-b border-[#333] text-white font-body text-sm py-2 pr-8 placeholder:text-white placeholder:tracking-[1px] placeholder:uppercase focus:outline-none focus:border-white transition-colors"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 text-[#888] hover:text-white transition-colors text-lg leading-none pb-1"
+              className="absolute right-0 top-1/2 -translate-y-1/2 text-white hover:text-white transition-colors text-lg leading-none pb-1"
             >
               ×
             </button>

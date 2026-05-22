@@ -101,7 +101,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
           <div className="flex items-center gap-4">
             <button
               onClick={() => setFullscreen((f) => !f)}
-              className="text-[#666] hover:text-white transition-colors text-2xl font-bold leading-none"
+              className="text-white hover:text-white transition-colors text-2xl font-bold leading-none"
               title={fullscreen ? 'Collapse' : 'Expand'}
             >
               {fullscreen ? '⤡' : '⤢'}
@@ -144,7 +144,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
               )}
               {confirmingDelete ? (
                 <>
-                  <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] self-center">Delete?</span>
+                  <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white self-center">Delete?</span>
                   <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
                     Confirm
                   </Button>

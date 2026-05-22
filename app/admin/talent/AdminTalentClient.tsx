@@ -102,7 +102,7 @@ export function AdminTalentClient({
               className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
                 statusFilter === s
                   ? 'border-white text-white'
-                  : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+                  : 'border-white text-white hover:border-white hover:text-white'
               }`}
             >
               {s} {s !== 'all' ? `(${counts[s]})` : `(${counts.all})`}
@@ -113,7 +113,7 @@ export function AdminTalentClient({
             className={`text-xs tracking-[2px] uppercase font-ui font-semibold px-4 py-2 border transition-colors ${
               statusFilter === 'deleted'
                 ? 'border-[#CC0000] text-[#CC0000]'
-                : 'border-[#444] text-[#888] hover:border-[#888] hover:text-white'
+                : 'border-white text-white hover:border-white hover:text-white'
             }`}
           >
             Deleted ({counts.deleted})
@@ -133,7 +133,7 @@ export function AdminTalentClient({
           {serviceFilter.length > 0 && (
             <button
               onClick={() => setServiceFilter([])}
-              className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-[#ccc] transition-colors px-2"
+              className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors px-2"
             >
               Clear
             </button>
@@ -171,7 +171,7 @@ export function AdminTalentClient({
                 </div>
                 <div className="flex flex-wrap gap-1 items-start">
                   {(app.services ?? []).slice(0, 3).map((s) => (
-                    <span key={s} className="text-xs tracking-[1px] uppercase font-ui text-white border border-[#222] px-1.5 py-0.5">
+                    <span key={s} className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-1.5 py-0.5">
                       {SERVICE_LABELS[s] ?? s}
                     </span>
                   ))}

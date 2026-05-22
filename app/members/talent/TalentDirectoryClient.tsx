@@ -92,7 +92,7 @@ export function TalentDirectoryClient({
           {activeFilters.length > 0 && (
             <button
               onClick={() => setActiveFilters([])}
-              className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-[#888] transition-colors px-2"
+              className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors px-2"
             >
               Clear
             </button>

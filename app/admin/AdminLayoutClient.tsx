@@ -34,7 +34,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
             className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
               pathname.startsWith('/admin/talent')
                 ? 'bg-white text-black'
-                : 'text-[#888] hover:text-white hover:bg-[#111]'
+                : 'text-white hover:bg-[#111]'
             }`}
           >
             Talent
@@ -44,23 +44,18 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
             className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
               pathname.startsWith('/admin/membership')
                 ? 'bg-white text-black'
-                : 'text-[#888] hover:text-white hover:bg-[#111]'
+                : 'text-white hover:bg-[#111]'
             }`}
           >
             Membership
           </Link>
 
-          <div className="mt-4 mb-1 px-4">
-            <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#2a2a2a]">
-              Content
-            </span>
-          </div>
           <Link
             href="/admin/posts"
             className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
               pathname.startsWith('/admin/posts')
                 ? 'bg-white text-black'
-                : 'text-[#888] hover:text-white hover:bg-[#111]'
+                : 'text-white hover:bg-[#111]'
             }`}
           >
             Posts
@@ -68,12 +63,12 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="px-4 py-4 border-t border-[#1a1a1a] flex flex-col gap-1">
-          <span className="px-4 text-xs tracking-[2px] uppercase font-ui font-semibold text-[#444]">
+          <span className="px-4 text-xs tracking-[2px] uppercase font-ui font-semibold text-white">
             Admin
           </span>
           <button
             onClick={handleLogout}
-            className="px-4 py-3 font-display text-sm tracking-[3px] uppercase text-[#888] hover:text-white hover:bg-[#111] transition-colors text-left"
+            className="px-4 py-3 font-display text-sm tracking-[3px] uppercase text-white hover:bg-[#111] transition-colors text-left"
           >
             Log Out
           </button>

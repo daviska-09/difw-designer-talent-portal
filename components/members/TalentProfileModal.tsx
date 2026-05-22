@@ -38,7 +38,7 @@ export function TalentProfileModal({ talent, onClose }: Props) {
             </span>
           ))}
           {talent.services_other && (
-            <span className="text-xs tracking-[2px] uppercase font-ui font-semibold border border-[#555] px-3 py-1 text-white">
+            <span className="text-xs tracking-[2px] uppercase font-ui font-semibold border border-white px-3 py-1 text-white">
               {talent.services_other}
             </span>
           )}

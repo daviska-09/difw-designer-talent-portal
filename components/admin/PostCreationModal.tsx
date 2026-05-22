@@ -28,7 +28,6 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
   const [error, setError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
@@ -37,7 +36,6 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
     return () => document.removeEventListener('keydown', onKey)
   }, [onClose])
 
-  // Revoke object URL on unmount to avoid memory leaks
   useEffect(() => {
     return () => {
       if (photoFile && photoPreview?.startsWith('blob:')) {
@@ -84,7 +82,7 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
       return
     }
     if (hyperlink.trim() && !/^https?:\/\/.+/.test(hyperlink.trim())) {
-      setError('Link must start with http:// or https://')
+      setError('Call-to-action link must start with http:// or https://')
       return
     }
 
@@ -129,15 +127,15 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
         if (e.target === e.currentTarget) onClose()
       }}
     >
-      <div className="bg-black border border-[#1a1a1a] w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-black border border-white w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-[#1a1a1a]">
+        <div className="flex items-center justify-between px-8 py-6 border-b border-white">
           <h2 className="font-display text-2xl tracking-[3px] uppercase">
             {isEdit ? 'Edit Post' : 'New Post'}
           </h2>
           <button
             onClick={onClose}
-            className="text-[#888] hover:text-white transition-colors text-xs tracking-[2px] uppercase font-ui font-semibold"
+            className="text-white hover:text-white transition-colors text-xs tracking-[2px] uppercase font-ui font-semibold"
           >
             Close
           </button>
@@ -151,7 +149,7 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
 
           {/* Headline */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] mb-3">
+            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
               Headline <span className="text-[#CC0000]">*</span>
             </label>
             <input
@@ -161,12 +159,12 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
               placeholder="Post headline..."
               className="input-base w-full"
             />
-            <p className="text-xs text-[#444] mt-1 font-ui">{headline.length}/120</p>
+            <p className="text-white text-xs mt-1 font-ui">{headline.length}/120</p>
           </div>
 
           {/* Body */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] mb-3">
+            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
               Body <span className="text-[#CC0000]">*</span>
             </label>
             <textarea
@@ -176,15 +174,18 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
               rows={8}
               className="input-base w-full resize-none"
             />
-            <p className="text-xs text-[#444] mt-1 font-ui">{bodyText.trim().length} characters (min 20)</p>
+            <p className="text-white text-xs mt-2 font-ui leading-relaxed">
+              {bodyText.trim().length} characters (min 20) &nbsp;·&nbsp; To hyperlink specific words, use{' '}
+              <code className="font-mono bg-[#111] px-1">[link text](https://example.com)</code>
+            </p>
           </div>
 
           {/* Feature Photo */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] mb-3">
+            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
               Feature Photo{' '}
-              <span className="text-[#444] normal-case tracking-normal font-normal">
-                (optional — JPG, PNG, WebP, max 5MB)
+              <span className="text-white font-normal normal-case tracking-normal">
+                — optional, JPG/PNG/WebP, max 5MB
               </span>
             </label>
             {photoPreview ? (
@@ -197,17 +198,17 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-6">
                   <button
                     type="button"
                     onClick={handleRemovePhoto}
-                    className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] hover:text-white transition-colors"
+                    className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors"
                   >
                     Remove Photo
                   </button>
                   <label
                     htmlFor="post-photo-input"
-                    className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] hover:text-white transition-colors cursor-pointer"
+                    className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors cursor-pointer"
                   >
                     Replace
                   </label>
@@ -233,7 +234,7 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
                 />
                 <label
                   htmlFor="post-photo-input"
-                  className="inline-flex items-center px-6 py-2 border border-[#333] text-[#888] hover:text-white hover:border-[#888] transition-colors cursor-pointer text-xs tracking-[2px] uppercase font-ui font-semibold"
+                  className="inline-flex items-center px-6 py-2 border border-white text-white hover:bg-white hover:text-black transition-colors cursor-pointer text-xs tracking-[2px] uppercase font-ui font-semibold"
                 >
                   Choose Photo
                 </label>
@@ -241,12 +242,16 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
             )}
           </div>
 
-          {/* Hyperlink */}
+          {/* Call-to-Action Link */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] mb-3">
-              Link{' '}
-              <span className="text-[#444] normal-case tracking-normal font-normal">(optional)</span>
+            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
+              Call-to-Action Link{' '}
+              <span className="text-white font-normal normal-case tracking-normal">— optional</span>
             </label>
+            <p className="text-white text-xs font-ui mb-3">
+              Displays as a button at the bottom of the post. For inline links within the body text, use{' '}
+              <code className="font-mono bg-[#111] px-1">[text](url)</code> syntax above.
+            </p>
             <input
               type="url"
               value={hyperlink}
@@ -258,11 +263,9 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
 
           {/* Publish Date */}
           <div>
-            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-[#888] mb-3">
+            <label className="block text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
               Publish Date{' '}
-              <span className="text-[#444] normal-case tracking-normal font-normal">
-                (defaults to now)
-              </span>
+              <span className="text-white font-normal normal-case tracking-normal">— defaults to now</span>
             </label>
             <input
               type="datetime-local"
@@ -275,7 +278,7 @@ export function PostCreationModal({ post, onClose, onSaved }: PostCreationModalP
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-4 px-8 py-6 border-t border-[#1a1a1a] flex-wrap">
+        <div className="flex items-center gap-4 px-8 py-6 border-t border-white flex-wrap">
           <Button onClick={() => handleSubmit(true)} loading={loading} variant="primary">
             {isEdit ? 'Save Changes' : 'Publish'}
           </Button>

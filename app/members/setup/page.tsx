@@ -62,7 +62,7 @@ export default function SetupPage() {
           <h1 className="font-display text-3xl tracking-[3px] uppercase mb-4 text-center">
             Set Your Password
           </h1>
-          <p className="text-[#888] text-sm text-center mb-10 font-body leading-relaxed">
+          <p className="text-white text-sm text-center mb-10 font-body leading-relaxed">
             Create a password to access your DIFW member account.
           </p>
 

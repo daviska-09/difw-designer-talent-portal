@@ -132,8 +132,8 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
           <div
             className={`mb-6 px-6 py-3 text-sm font-ui font-semibold tracking-[1px] border ${
               toast.type === 'success'
-                ? 'text-white bg-[#111] border-[#333]'
-                : 'text-[#CC0000] bg-[#0a0000] border-[#CC0000]'
+                ? 'text-white bg-black border-white'
+                : 'text-[#CC0000] bg-black border-[#CC0000]'
             }`}
           >
             {toast.message}
@@ -142,19 +142,19 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
 
         {/* Posts list */}
         {posts.length === 0 && !loadingPage ? (
-          <div className="border-t border-[#1a1a1a] pt-16 text-center">
+          <div className="border-t border-white pt-16 text-center">
             <p className="font-display text-2xl tracking-[3px] uppercase text-white mb-4">
               No Posts Yet
             </p>
-            <p className="text-[#888] text-sm">
+            <p className="text-white text-sm">
               Click &ldquo;New Post&rdquo; to create your first announcement.
             </p>
           </div>
         ) : (
           <>
-            <div className="border border-[#1a1a1a]">
+            <div className="border border-white">
               {/* Table header */}
-              <div className="grid grid-cols-[1fr_100px_120px_80px] gap-0 border-b border-[#1a1a1a] px-6 py-3">
+              <div className="grid grid-cols-[1fr_100px_120px_80px] gap-0 border-b border-white px-6 py-3">
                 {['Headline', 'Status', 'Published', ''].map((h) => (
                   <span
                     key={h}
@@ -166,34 +166,30 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
               </div>
 
               {loadingPage ? (
-                <div className="px-6 py-12 text-center text-[#888] text-sm font-ui">
+                <div className="px-6 py-12 text-center text-white text-sm font-ui">
                   Loading...
                 </div>
               ) : (
                 posts.map((post) => (
                   <div
                     key={post.id}
-                    className="group grid grid-cols-[1fr_100px_120px_80px] items-center gap-0 px-6 py-4 border-b border-[#0d0d0d] hover:bg-[#050505] transition-colors"
+                    className="group grid grid-cols-[1fr_100px_120px_80px] items-center gap-0 px-6 py-4 border-b border-white/20 hover:bg-[#050505] transition-colors"
                   >
                     {/* Headline */}
                     <button
                       onClick={() => openEdit(post)}
-                      className="text-white text-sm font-medium text-left truncate pr-4 hover:text-[#ccc] transition-colors"
+                      className="text-white text-sm font-medium text-left truncate pr-4 hover:underline transition-colors"
                     >
                       {post.headline}
                     </button>
 
                     {/* Status */}
-                    <span
-                      className={`text-xs tracking-[2px] uppercase font-ui font-semibold ${
-                        post.is_published ? 'text-white' : 'text-[#555]'
-                      }`}
-                    >
+                    <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">
                       {post.is_published ? 'Live' : 'Draft'}
                     </span>
 
                     {/* Date */}
-                    <span className="text-xs text-[#888] font-ui">
+                    <span className="text-xs text-white font-ui">
                       {new Date(post.published_at).toLocaleDateString('en-IE', {
                         day: 'numeric',
                         month: 'short',
@@ -204,7 +200,7 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
                     {/* Actions */}
                     {confirmDeleteId === post.id ? (
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-[#888] font-ui">Delete?</span>
+                        <span className="text-xs text-white font-ui">Delete?</span>
                         <button
                           onClick={() => handleDelete(post.id)}
                           disabled={deletingId === post.id}
@@ -214,7 +210,7 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(null)}
-                          className="text-xs tracking-[1px] uppercase font-ui font-semibold text-[#888] hover:text-white transition-colors"
+                          className="text-xs tracking-[1px] uppercase font-ui font-semibold text-white hover:text-white transition-colors"
                         >
                           No
                         </button>
@@ -223,14 +219,14 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
                         <button
                           onClick={() => openEdit(post)}
-                          className="text-[#888] hover:text-white transition-colors p-1"
+                          className="text-white hover:text-white transition-colors p-1"
                           title="Edit post"
                         >
                           <EditIcon />
                         </button>
                         <button
                           onClick={() => setConfirmDeleteId(post.id)}
-                          className="text-[#888] hover:text-[#CC0000] transition-colors p-1"
+                          className="text-white hover:text-[#CC0000] transition-colors p-1"
                           title="Delete post"
                         >
                           <TrashIcon />
@@ -245,21 +241,21 @@ export function AdminPostsClient({ initialPosts, initialTotal }: AdminPostsClien
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-6">
-                <span className="text-xs text-[#888] font-ui">
+                <span className="text-xs text-white font-ui">
                   Page {page} of {totalPages} &mdash; {total} posts total
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => loadPage(page - 1)}
                     disabled={page === 1 || loadingPage}
-                    className="px-4 py-2 text-xs tracking-[2px] uppercase font-ui font-semibold border border-[#333] text-[#888] hover:text-white hover:border-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="px-4 py-2 text-xs tracking-[2px] uppercase font-ui font-semibold border border-white text-white hover:bg-white hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     Prev
                   </button>
                   <button
                     onClick={() => loadPage(page + 1)}
                     disabled={page === totalPages || loadingPage}
-                    className="px-4 py-2 text-xs tracking-[2px] uppercase font-ui font-semibold border border-[#333] text-[#888] hover:text-white hover:border-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="px-4 py-2 text-xs tracking-[2px] uppercase font-ui font-semibold border border-white text-white hover:bg-white hover:text-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
