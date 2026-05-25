@@ -310,15 +310,19 @@ export function TalentApplicationForm() {
       </div>
 
       {/* ── About Me ── */}
-      <Textarea
-        label="About Me *"
-        hint="Tell us about your creative practice, experience, and the type of work you're interested in. This section, alongside your portfolio, is an important part of your application, as it will be shared with DIFW members when selecting creatives to collaborate with."
-        value={fields.about_me}
-        onChange={(e) => set('about_me', e.target.value)}
-        required
-        rows={6}
-        placeholder="Tell us about your creative practice, experience, and the type of work you're interested in..."
-      />
+      <div className="space-y-2">
+        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555]">About Me *</p>
+        <p className="text-xs text-[#888] font-body leading-relaxed">
+          Tell us about your creative practice, experience, and the type of work you&apos;re interested in. This section, alongside your portfolio, is an important part of your application, as it will be shared with DIFW members when selecting creatives to collaborate with.
+        </p>
+        <Textarea
+          value={fields.about_me}
+          onChange={(e) => set('about_me', e.target.value)}
+          required
+          rows={6}
+          placeholder="Tell us about your creative practice, experience, and the type of work you're interested in..."
+        />
+      </div>
 
       {/* ── Agreement ── */}
       <div className="border-t border-[#E5E5E5] pt-8">
