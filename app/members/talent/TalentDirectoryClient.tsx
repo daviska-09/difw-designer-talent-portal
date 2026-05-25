@@ -66,9 +66,6 @@ export function TalentDirectoryClient({
           <p className="text-white/80 text-sm leading-relaxed max-w-2xl mb-2">
             Welcome to the DIFW Talent Directory! Our community is made up of an incredible network of talented creatives across fashion and the wider creative industries. Browse member profiles, discover potential collaborators, and connect with people who can support your projects during Dublin Independent Fashion Week and beyond.
           </p>
-          <p className="text-white/50 text-sm mt-4">
-            {initialTalent.length} approved profile{initialTalent.length !== 1 ? 's' : ''}
-          </p>
         </div>
 
         {/* Search */}
