@@ -58,7 +58,7 @@ export function TalentDirectoryClient({
         {/* Header */}
         <div className="mb-12">
           <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3">
-            Member Area
+            Member Portal
           </p>
           <h1 className="font-display text-4xl tracking-[3px] uppercase mb-4">
             Talent Directory
