@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Logo } from '@/components/layout/Logo'
 
 const NAV_LINKS = [
+  { href: '/members', label: 'Home' },
   { href: '/members/talent', label: 'Talent' },
   { href: '/members/announcements', label: 'Events & Announcements' },
   { href: '/members/account', label: 'Account' },
