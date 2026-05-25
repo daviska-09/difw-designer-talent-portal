@@ -5,11 +5,11 @@ import { Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import type { MembershipTier } from '@/lib/types'
 
-const TIERS: { value: MembershipTier; label: string }[] = [
-  { value: 'emerging_designer', label: 'Emerging Designer' },
-  { value: 'established_designer', label: 'Established Designer' },
-  { value: 'signature_designer', label: 'Signature Designer' },
-  { value: 'producer', label: 'Producer' },
+const TIERS: { value: MembershipTier; label: string; price: string }[] = [
+  { value: 'emerging_designer', label: 'Emerging Designer', price: '€110' },
+  { value: 'established_designer', label: 'Established Designer', price: '€210' },
+  { value: 'signature_designer', label: 'Signature Designer', price: '€450' },
+  { value: 'producer', label: 'Producer', price: '€100' },
 ]
 
 const COMMUNITY_VALUES = [
@@ -148,7 +148,6 @@ export function MembershipApplicationForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!tier) { setError('Please select a membership tier.'); return }
-    if (!files.headshot) { setError('Please upload a headshot.'); return }
     if (!files.logo) { setError('Please upload your logo.'); return }
     if (tier === 'emerging_designer' && !files.emerging_proof) {
       setError('Please upload proof of student status or graduation year.')
@@ -297,6 +296,13 @@ export function MembershipApplicationForm() {
               >
                 {t.label}
               </p>
+              <p
+                className={`font-ui text-sm tracking-[1px] mt-1 ${
+                  tier === t.value ? 'text-[#555]' : 'text-[#bbb]'
+                }`}
+              >
+                {t.price}
+              </p>
             </button>
           ))}
         </div>
@@ -392,7 +398,6 @@ export function MembershipApplicationForm() {
         <FileInput
           label="Headshot"
           hint="JPG, PNG or WebP — max 10MB"
-          required
           accept={IMAGE_TYPES}
           maxMB={10}
           value={files.headshot}

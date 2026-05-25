@@ -56,9 +56,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    if (!headshotFile || headshotFile.size === 0) {
-      return NextResponse.json({ error: 'Headshot is required' }, { status: 400 })
-    }
     if (!logoFile || logoFile.size === 0) {
       return NextResponse.json({ error: 'Logo is required' }, { status: 400 })
     }
@@ -71,7 +68,9 @@ export async function POST(request: NextRequest) {
     const safeName = full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const folder = `${safeName}-${applicationId.slice(0, 8)}`
 
-    const headshot_url = await uploadFile(supabase, headshotFile, `${folder}/headshot`)
+    const headshot_url = headshotFile && headshotFile.size > 0
+      ? await uploadFile(supabase, headshotFile, `${folder}/headshot`)
+      : null
     const logo_url = await uploadFile(supabase, logoFile, `${folder}/logo`)
 
     const supporting_docs_url = supportingDocsFile && supportingDocsFile.size > 0
