@@ -46,7 +46,7 @@ export interface MembershipApplication {
   about_work: string
   why_join: string
   difw26_participation: DIFW26Participation
-  headshot_url: string
+  headshot_url: string | null
   logo_url: string
   supporting_docs_url: string | null
   values_agreement: boolean

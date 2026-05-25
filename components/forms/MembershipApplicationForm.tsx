@@ -174,7 +174,7 @@ export function MembershipApplicationForm() {
       formData.append('consent_contact', String(fields.consent_contact))
       formData.append('consent_profile_sharing', String(fields.consent_profile_sharing))
       formData.append('consent_not_guaranteed', String(fields.consent_not_guaranteed))
-      formData.append('headshot', files.headshot)
+      if (files.headshot) formData.append('headshot', files.headshot)
       formData.append('logo', files.logo)
       if (files.supporting_docs) formData.append('supporting_docs', files.supporting_docs)
       if (files.emerging_proof) formData.append('emerging_proof', files.emerging_proof)
