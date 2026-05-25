@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button'
 function LoginForm() {
   const router = useRouter()
   const params = useSearchParams()
-  const redirect = params.get('redirect') ?? '/members/talent'
+  const redirect = params.get('redirect') ?? '/members'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
