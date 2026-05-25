@@ -93,7 +93,7 @@ textarea.input-base:focus {
 }
 
 .form-light .input-base::placeholder {
-  color: #bbb;
+  color: #888;
 }
 
 .form-light .input-base:focus {
