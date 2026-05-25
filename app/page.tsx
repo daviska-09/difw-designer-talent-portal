@@ -32,7 +32,7 @@ export default function HomePage() {
           Thank you for being part of Dublin Independent Fashion Week. Since our first event in 2023, DIFW has grown enormously, and none of it would have been possible without the support, creativity, and energy of our community. We are incredibly grateful to have you as part of this movement.
         </p>
         <p className="text-white/70 mb-8 max-w-md leading-relaxed text-sm">
-          Within this members-only space, you'll be able to access our ever-growing Talent Directory, keep up to date with exclusive events and opportunities, and manage your DIFW membership throughout the year.
+          Within this members-only space, you&apos;ll be able to access our ever-growing Talent Directory, keep up to date with exclusive events and opportunities, and manage your DIFW membership throughout the year.
         </p>
         <p className="text-white/70 mb-10 max-w-md leading-relaxed text-sm">
           If you have any questions, feel free to reach out to{' '}

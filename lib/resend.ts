@@ -79,7 +79,6 @@ export async function sendMembershipApproval(
   paymentLink: string,
   paymentAmount: string
 ) {
-  const firstName = fullName.split(' ')[0]
   const tierLabel = tier.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
   return getResend().emails.send({
     from: FROM,
