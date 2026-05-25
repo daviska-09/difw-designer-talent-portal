@@ -10,7 +10,7 @@ const TIER_LABELS: Record<string, string> = {
   emerging_designer: 'Emerging Designer',
   established_designer: 'Established Designer',
   signature_designer: 'Signature Designer',
-  curator: 'Curator',
+  producer: 'Producer',
 }
 
 export function AccountClient({ user, member, headshotUrl }: { user: User; member: Member | null; headshotUrl: string | null }) {

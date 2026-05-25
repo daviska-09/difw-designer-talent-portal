@@ -9,7 +9,7 @@ const TIERS: { value: MembershipTier; label: string }[] = [
   { value: 'emerging_designer', label: 'Emerging Designer' },
   { value: 'established_designer', label: 'Established Designer' },
   { value: 'signature_designer', label: 'Signature Designer' },
-  { value: 'curator', label: 'Curator' },
+  { value: 'producer', label: 'Producer' },
 ]
 
 const COMMUNITY_VALUES = [

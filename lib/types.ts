@@ -1,6 +1,6 @@
 export type TalentStatus = 'pending' | 'approved' | 'rejected'
 export type MembershipStatus = 'pending' | 'approved' | 'rejected' | 'paid'
-export type MembershipTier = 'emerging_designer' | 'established_designer' | 'signature_designer' | 'curator'
+export type MembershipTier = 'emerging_designer' | 'established_designer' | 'signature_designer' | 'producer'
 export type DIFW26Participation = 'yes' | 'no' | 'unsure'
 
 export type ServiceType =

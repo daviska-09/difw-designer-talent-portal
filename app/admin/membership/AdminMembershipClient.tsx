@@ -6,13 +6,13 @@ import { Input } from '@/components/ui/Input'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import type { MembershipApplication, MembershipStatus, MembershipTier } from '@/lib/types'
 
-const TIER_OPTIONS: MembershipTier[] = ['emerging_designer', 'established_designer', 'signature_designer', 'curator']
+const TIER_OPTIONS: MembershipTier[] = ['emerging_designer', 'established_designer', 'signature_designer', 'producer']
 
 const TIER_LABELS: Record<MembershipTier, string> = {
   emerging_designer: 'Emerging',
   established_designer: 'Established',
   signature_designer: 'Signature',
-  curator: 'Curator',
+  producer: 'Producer',
 }
 
 // ── Approve Modal ─────────────────────────────────────────────
