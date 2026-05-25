@@ -28,7 +28,7 @@ export function AccountClient({ user, member, headshotUrl }: { user: User; membe
   return (
     <div className="px-8 py-12 max-w-2xl mx-auto">
       <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3">
-        Member Portal
+        DIFW Portal
       </p>
       <h1 className="font-display text-4xl tracking-[3px] uppercase mb-12">Account</h1>
 

@@ -4,7 +4,7 @@ export default function EventsPage() {
   return (
     <div className="px-8 py-12 max-w-4xl mx-auto">
       <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3">
-        Member Portal
+        DIFW Portal
       </p>
       <h1 className="font-display text-4xl tracking-[3px] uppercase mb-8">Events</h1>
       <div className="border-t border-[#1a1a1a] pt-16 text-center">

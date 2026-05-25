@@ -57,7 +57,7 @@ export default function SetupPage() {
       <div className="flex-1 flex items-center justify-center px-8">
         <div className="w-full max-w-sm">
           <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3 text-center">
-            Member Portal
+            DIFW Portal
           </p>
           <h1 className="font-display text-3xl tracking-[3px] uppercase mb-4 text-center">
             Set Your Password
