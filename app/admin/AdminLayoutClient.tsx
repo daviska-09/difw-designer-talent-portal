@@ -63,9 +63,6 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="px-4 py-4 border-t border-[#1a1a1a] flex flex-col gap-1">
-          <span className="px-4 text-xs tracking-[2px] uppercase font-ui font-semibold text-white">
-            Admin
-          </span>
           <button
             onClick={handleLogout}
             className="px-4 py-3 font-display text-sm tracking-[3px] uppercase text-white hover:bg-[#111] transition-colors text-left"
