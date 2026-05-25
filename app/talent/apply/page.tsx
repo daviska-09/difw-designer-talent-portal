@@ -18,7 +18,7 @@ export default function TalentApplyPage() {
 
         <div className="relative">
           <header className="border-b border-white/20 px-8 py-6">
-            <Logo className="text-white/60 hover:text-white" />
+            <Logo />
           </header>
           <div className="max-w-2xl mx-auto px-8 pt-12 pb-16">
             <img
