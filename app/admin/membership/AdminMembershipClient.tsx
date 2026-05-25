@@ -322,7 +322,7 @@ function DetailPanel({
             </Field>
             <Field label="Uploads">
               <div className="flex flex-wrap gap-4 mt-1">
-                <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Headshot</a>
+                {app.headshot_url && <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Headshot</a>}
                 <a href={app.logo_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Logo</a>
                 {app.emerging_proof_url && (
                   <a href={app.emerging_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Eligibility Proof</a>
