@@ -32,8 +32,14 @@ export default function TalentApplyPage() {
             <h2 className="font-display text-4xl sm:text-5xl tracking-[3px] uppercase mb-6 text-white">
               Directory
             </h2>
+            <p className="text-white/75 leading-relaxed max-w-lg mb-4">
+              Submit your information and portfolio below to become part of the DIFW community and join our members-only DIFW Talent Directory.
+            </p>
+            <p className="text-white/75 leading-relaxed max-w-lg mb-4">
+              Our members regularly draw on this database to find creative talent for shows, shoots, events, and collaborations both during Dublin Independent Fashion Week and throughout the year.
+            </p>
             <p className="text-white/75 leading-relaxed max-w-lg">
-              Submit your information and portfolio below to become part of our community and connect with designers. Your portfolio is an important part of your application, as it will be shared with our members when they are selecting creatives to work with.
+              Please note that inclusion in the directory does not guarantee work opportunities or direct outreach from members.
             </p>
           </div>
         </div>

@@ -4,11 +4,19 @@ export type MembershipTier = 'emerging_designer' | 'established_designer' | 'sig
 export type DIFW26Participation = 'yes' | 'no' | 'unsure'
 
 export type ServiceType =
+  | 'model'
   | 'photographer'
   | 'videographer'
-  | 'model'
+  | 'content_creator'
   | 'stylist'
+  | 'hair_stylist'
   | 'mua'
+  | 'production_crew'
+  | 'backstage_assistant'
+  | 'lighting_technician'
+  | 'sound_technician'
+  | 'dj_musician'
+  | 'performer'
   | 'other'
 
 export interface TalentApplication {

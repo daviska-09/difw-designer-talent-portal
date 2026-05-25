@@ -7,11 +7,19 @@ import { Chip } from '@/components/ui/Chip'
 import type { ServiceType } from '@/lib/types'
 
 const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
+  { value: 'model', label: 'Model' },
   { value: 'photographer', label: 'Photographer' },
   { value: 'videographer', label: 'Videographer' },
-  { value: 'model', label: 'Model' },
+  { value: 'content_creator', label: 'Content Creator' },
   { value: 'stylist', label: 'Stylist' },
-  { value: 'mua', label: 'MUA' },
+  { value: 'hair_stylist', label: 'Hair Stylist' },
+  { value: 'mua', label: 'Makeup Artist (MUA)' },
+  { value: 'production_crew', label: 'Production Crew' },
+  { value: 'backstage_assistant', label: 'Backstage Assistant' },
+  { value: 'lighting_technician', label: 'Lighting Technician' },
+  { value: 'sound_technician', label: 'Sound Technician' },
+  { value: 'dj_musician', label: 'DJ / Musician' },
+  { value: 'performer', label: 'Performer' },
   { value: 'other', label: 'Other' },
 ]
 
@@ -304,12 +312,12 @@ export function TalentApplicationForm() {
       {/* ── About Me ── */}
       <Textarea
         label="About Me *"
-        hint="Write something that helps our members understand your work and how you collaborate."
+        hint="Tell us about your creative practice, experience, and the type of work you're interested in. This section, alongside your portfolio, is an important part of your application, as it will be shared with DIFW members when selecting creatives to collaborate with."
         value={fields.about_me}
         onChange={(e) => set('about_me', e.target.value)}
         required
         rows={6}
-        placeholder="Tell us about your practice, your approach, and the kinds of projects you love..."
+        placeholder="Tell us about your creative practice, experience, and the type of work you're interested in..."
       />
 
       {/* ── Agreement ── */}

@@ -7,11 +7,19 @@ import { TalentProfileModal } from '@/components/members/TalentProfileModal'
 import type { TalentApplication, ServiceType } from '@/lib/types'
 
 const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
+  { value: 'model', label: 'Model' },
   { value: 'photographer', label: 'Photographer' },
   { value: 'videographer', label: 'Videographer' },
-  { value: 'model', label: 'Model' },
+  { value: 'content_creator', label: 'Content Creator' },
   { value: 'stylist', label: 'Stylist' },
-  { value: 'mua', label: 'MUA' },
+  { value: 'hair_stylist', label: 'Hair Stylist' },
+  { value: 'mua', label: 'Makeup Artist (MUA)' },
+  { value: 'production_crew', label: 'Production Crew' },
+  { value: 'backstage_assistant', label: 'Backstage Assistant' },
+  { value: 'lighting_technician', label: 'Lighting Technician' },
+  { value: 'sound_technician', label: 'Sound Technician' },
+  { value: 'dj_musician', label: 'DJ / Musician' },
+  { value: 'performer', label: 'Performer' },
   { value: 'other', label: 'Other' },
 ]
 
