@@ -13,6 +13,12 @@ export default function HomePage() {
           >
             Login
           </Link>
+          <Link
+            href="/admin/login"
+            className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white hover:text-white transition-colors"
+          >
+            Admin
+          </Link>
         </nav>
       </header>
 
