@@ -60,10 +60,13 @@ export function TalentDirectoryClient({
           <p className="text-xs tracking-[3px] uppercase font-ui font-semibold text-white mb-3">
             Member Area
           </p>
-          <h1 className="font-display text-4xl tracking-[3px] uppercase mb-2">
+          <h1 className="font-display text-4xl tracking-[3px] uppercase mb-4">
             Talent Directory
           </h1>
-          <p className="text-white text-sm">
+          <p className="text-white/80 text-sm leading-relaxed max-w-2xl mb-2">
+            Welcome to the DIFW Talent Directory! Our community is made up of an incredible network of talented creatives across fashion and the wider creative industries. Browse member profiles, discover potential collaborators, and connect with people who can support your projects during Dublin Independent Fashion Week and beyond.
+          </p>
+          <p className="text-white/50 text-sm mt-4">
             {initialTalent.length} approved profile{initialTalent.length !== 1 ? 's' : ''}
           </p>
         </div>

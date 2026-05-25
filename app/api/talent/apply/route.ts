@@ -88,6 +88,9 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
+      if (error.code === '23505') {
+        return NextResponse.json({ error: 'An application with this email address already exists.' }, { status: 409 })
+      }
       console.error('Supabase insert error:', error)
       return NextResponse.json({ error: 'Failed to save application' }, { status: 500 })
     }

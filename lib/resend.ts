@@ -14,11 +14,11 @@ export async function sendTalentConfirmation(to: string, fullName: string) {
     from: FROM,
     replyTo: REPLY_TO,
     to,
-    subject: 'DIFW Talent Database — Submission Received',
+    subject: 'DIFW Talent Directory — Submission Received',
     html: emailWrapper(`
       <h1>Submission Received</h1>
       <p>Hi ${firstName},</p>
-      <p>Thank you for your submission to the DIFW Talent Database. Submissions are reviewed on a rolling basis and you can expect to hear back within 5 business days.</p>
+      <p>Thank you for your submission to the DIFW Talent Directory. Submissions are reviewed on a rolling basis and you can expect to hear back within 5 business days.</p>
       <p>If you have any questions in the meantime, please contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
@@ -30,11 +30,11 @@ export async function sendTalentApproval(to: string, fullName: string) {
     from: FROM,
     replyTo: REPLY_TO,
     to,
-    subject: 'DIFW Talent Database — Application Approved',
+    subject: 'DIFW Talent Directory — Application Approved',
     html: emailWrapper(`
       <h1>You're In</h1>
       <p>Hi ${firstName},</p>
-      <p>Your submission to the DIFW Talent Database has been approved. Your profile is now visible to DIFW members when they are selecting creatives to work with.</p>
+      <p>Your submission to the DIFW Talent Directory has been approved. Your profile is now visible to DIFW members when they are selecting creatives to work with.</p>
       <p>If you need to update any of your details or portfolio links, reply to this email or contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
@@ -46,11 +46,11 @@ export async function sendTalentRejection(to: string, fullName: string) {
     from: FROM,
     replyTo: REPLY_TO,
     to,
-    subject: 'DIFW Talent Database — Application Update',
+    subject: 'DIFW Talent Directory — Application Update',
     html: emailWrapper(`
       <h1>Application Update</h1>
       <p>Hi ${firstName},</p>
-      <p>Thank you for your interest in the DIFW Talent Database. After reviewing your submission, we're unable to move forward at this time.</p>
+      <p>Thank you for your interest in the DIFW Talent Directory. After reviewing your submission, we're unable to move forward at this time.</p>
       <p>We appreciate you taking the time to apply and wish you the best with your work.</p>
     `),
   })
@@ -89,11 +89,11 @@ export async function sendMembershipApproval(
     html: emailWrapper(`
       <h1 style="margin:0 0 4px;">Your Application</h1>
       <h1 style="margin:0 0 32px;">Has Been Approved</h1>
-      <p>Congratulations ${firstName}. Your application for DIFW membership has been approved by our team.</p>
+      <p>We are delighted to let you know that your application to become a member has been approved.</p>
       <p>To confirm your membership, please complete your payment using the link below.</p>
-      <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:32px 0 16px;">${tierLabel} Membership — ${paymentAmount}</p>
+      <p style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#555;margin:32px 0 16px;">${tierLabel} — ${paymentAmount}</p>
       <a href="${paymentLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;">Complete Payment</a>
-      <p style="margin-top:40px;">Once your payment is confirmed, you will receive a separate email with access to the DIFW member portal.</p>
+      <p style="margin-top:40px;">Once your payment is confirmed, you will receive a separate email with access to the DIFW portal.</p>
       <p>If you have any questions, contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
@@ -104,12 +104,14 @@ export async function sendMembershipRejection(to: string, firstName: string) {
     from: FROM,
     replyTo: REPLY_TO,
     to,
-    subject: 'DIFW Membership — Application Update',
+    subject: 'Your DIFW Membership Application',
     html: emailWrapper(`
       <h1>Application Update</h1>
       <p>Hi ${firstName},</p>
-      <p>Thank you for your interest in DIFW membership. After reviewing your application, we're unable to move forward at this time.</p>
-      <p>We appreciate your support and hope to connect with you at future DIFW events.</p>
+      <p>Thank you for submitting an application to become a DIFW Member.</p>
+      <p>After careful review, we have decided not to move forward with your application at this time.</p>
+      <p>If you would like to appeal this decision, receive feedback, or discuss reapplying in the future, please contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a>.</p>
+      <p>We sincerely appreciate your interest in being part of the DIFW community.</p>
     `),
   })
 }
@@ -129,10 +131,11 @@ export async function sendMemberWelcome(
       <h1 style="margin:0 0 4px;">Welcome to DIFW,</h1>
       <h1 style="margin:0 0 32px;">${firstName}.</h1>
       <p>Your payment has been confirmed and your membership is now active.</p>
-      <p>Click the button below to set up your password and access the member portal. This link expires in 24 hours and can only be used once.</p>
+      <p>Please click the link below to create your account and access the DIFW Portal. This link expires in 24 hours and can only be used once.</p>
       <a href="${magicLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Access Member Portal</a>
-      <p style="margin-top:40px;">Inside the portal you will find:</p>
-      <p style="color:#555;">— The DIFW talent database<br>— Member announcements and articles<br>— Events and industry updates</p>
+      <p style="margin-top:40px;">Here, you can:</p>
+      <p style="color:#555;">— Access the DIFW Talent Directory<br>— Stay up to date with events, announcements, and opportunities exclusive to DIFW members<br>— Manage your DIFW membership account</p>
+      <p>Thank you for being part of the DIFW community, we're excited to have you with us. Let's change the future of fashion together.</p>
     `),
   })
 }

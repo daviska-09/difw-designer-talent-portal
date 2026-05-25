@@ -173,7 +173,7 @@ export function TalentApplicationForm() {
           Thank You for Your Submission
         </p>
         <p className="text-[#555] max-w-md mx-auto leading-relaxed font-body">
-          Submissions to the Talent Database are reviewed on a rolling basis. You can expect to hear back within 5 business days.
+          Submissions to the Talent Directory are reviewed on a rolling basis. You can expect to hear back within 5 business days.
           If you have any questions, please contact{' '}
           <a href="mailto:info@dublin-ifw.com" className="underline hover:text-black transition-colors">
             info@dublin-ifw.com

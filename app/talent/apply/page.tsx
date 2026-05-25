@@ -2,7 +2,7 @@ import { Logo } from '@/components/layout/Logo'
 import { TalentApplicationForm } from '@/components/forms/TalentApplicationForm'
 
 export const metadata = {
-  title: 'Talent Database — DIFW',
+  title: 'Talent Directory — DIFW',
 }
 
 export default function TalentApplyPage() {
@@ -30,7 +30,7 @@ export default function TalentApplyPage() {
               Talent
             </h1>
             <h2 className="font-display text-4xl sm:text-5xl tracking-[3px] uppercase mb-6 text-white">
-              Database
+              Directory
             </h2>
             <p className="text-white/75 leading-relaxed max-w-lg">
               Submit your information and portfolio below to become part of our community and connect with designers. Your portfolio is an important part of your application, as it will be shared with our members when they are selecting creatives to work with.
