@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
       return
     }
 
-    router.push('/admin/talent')
+    router.push('/admin')
     router.refresh()
   }
 

@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect already-authenticated admins away from the login page
   if (pathname === '/admin/login' && user?.user_metadata?.role === 'admin') {
-    return NextResponse.redirect(new URL('/admin/talent', request.url))
+    return NextResponse.redirect(new URL('/admin', request.url))
   }
 
   return supabaseResponse

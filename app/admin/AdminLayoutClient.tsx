@@ -25,7 +25,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="w-52 flex-shrink-0 border-r border-[#1a1a1a] flex flex-col sticky top-0 h-screen">
         <div className="px-6 py-6 border-b border-[#1a1a1a]">
-          <Logo />
+          <Logo href="/admin" />
         </div>
 
         <nav className="flex flex-col p-4 gap-1 flex-1">
