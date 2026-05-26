@@ -70,8 +70,15 @@ export async function POST(
       }
     }
 
-    // Send welcome email (non-blocking)
-    sendMemberWelcome(app.email, app.full_name).catch(console.error)
+    const { data: memberRecord } = await service
+      .from('members')
+      .select('id')
+      .eq('email', app.email)
+      .single()
+
+    if (memberRecord?.id) {
+      sendMemberWelcome(app.email, app.full_name, memberRecord.id).catch(console.error)
+    }
 
     return NextResponse.json({ success: true, emailSent: true })
   } catch (err) {

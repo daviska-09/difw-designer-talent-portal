@@ -115,9 +115,9 @@ export async function sendMembershipRejection(to: string, firstName: string) {
   })
 }
 
-export async function sendMemberWelcome(to: string, fullName: string) {
+export async function sendMemberWelcome(to: string, fullName: string, memberId: string) {
   const firstName = fullName.split(' ')[0]
-  const setupUrl = `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`
+  const setupUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/access?token=${memberId}`
   return getResend().emails.send({
     from: FROM,
     replyTo: REPLY_TO,

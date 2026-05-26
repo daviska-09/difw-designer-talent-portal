@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Send welcome email
-    await sendMemberWelcome(email, full_name)
+    await sendMemberWelcome(email, full_name, userId)
 
     // Write Supabase User ID back to Airtable
     if (airtable_record_id) {
