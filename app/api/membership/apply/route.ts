@@ -68,18 +68,12 @@ export async function POST(request: NextRequest) {
     const safeName = full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const folder = `${safeName}-${applicationId.slice(0, 8)}`
 
-    const headshot_url = headshotFile && headshotFile.size > 0
-      ? await uploadFile(supabase, headshotFile, `${folder}/headshot`)
-      : null
-    const logo_url = await uploadFile(supabase, logoFile, `${folder}/logo`)
-
-    const supporting_docs_url = supportingDocsFile && supportingDocsFile.size > 0
-      ? await uploadFile(supabase, supportingDocsFile, `${folder}/supporting_docs`)
-      : null
-
-    const emerging_proof_url = emergingProofFile && emergingProofFile.size > 0
-      ? await uploadFile(supabase, emergingProofFile, `${folder}/emerging_proof`)
-      : null
+    const [headshot_url, logo_url, supporting_docs_url, emerging_proof_url] = await Promise.all([
+      headshotFile && headshotFile.size > 0 ? uploadFile(supabase, headshotFile, `${folder}/headshot`) : Promise.resolve(null),
+      uploadFile(supabase, logoFile, `${folder}/logo`),
+      supportingDocsFile && supportingDocsFile.size > 0 ? uploadFile(supabase, supportingDocsFile, `${folder}/supporting_docs`) : Promise.resolve(null),
+      emergingProofFile && emergingProofFile.size > 0 ? uploadFile(supabase, emergingProofFile, `${folder}/emerging_proof`) : Promise.resolve(null),
+    ])
 
     const { data, error } = await supabase
       .from('membership_applications')

@@ -59,11 +59,10 @@ export async function POST(request: NextRequest) {
     const safeName = full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const folder = `${safeName}-${applicationId.slice(0, 8)}`
 
-    const headshot_url = await uploadFile(supabase, headshotFile, `${folder}/headshot`)
-
-    const supplementary_url = supplementaryFile && supplementaryFile.size > 0
-      ? await uploadFile(supabase, supplementaryFile, `${folder}/supplementary`)
-      : null
+    const [headshot_url, supplementary_url] = await Promise.all([
+      uploadFile(supabase, headshotFile, `${folder}/headshot`),
+      supplementaryFile && supplementaryFile.size > 0 ? uploadFile(supabase, supplementaryFile, `${folder}/supplementary`) : Promise.resolve(null),
+    ])
 
     const { data, error } = await supabase
       .from('talent_applications')
