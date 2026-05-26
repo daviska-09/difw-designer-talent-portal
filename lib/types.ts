@@ -88,5 +88,6 @@ export interface Member {
   email: string | null
   membership_tier: MembershipTier | null
   membership_application_id: string | null
+  profile_photo_url: string | null
   created_at: string
 }

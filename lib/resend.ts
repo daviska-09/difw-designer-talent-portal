@@ -3,8 +3,8 @@ import { Resend } from 'resend'
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY)
 }
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'noreply@dublinfashionweek.ie'
-const REPLY_TO = 'hello@dublinfashionweek.ie'
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'noreply@dublin-ifw.com'
+const REPLY_TO = 'info@dublin-ifw.com'
 
 // ── Talent emails ────────────────────────────────────────────
 

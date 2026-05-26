@@ -17,8 +17,8 @@ export default async function AccountPage() {
     .eq('id', user.id)
     .single()
 
-  let headshotUrl: string | null = null
-  if (member?.membership_application_id) {
+  let headshotUrl: string | null = member?.profile_photo_url ?? null
+  if (!headshotUrl && member?.membership_application_id) {
     const { data: application } = await supabase
       .from('membership_applications')
       .select('headshot_url')
