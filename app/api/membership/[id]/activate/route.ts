@@ -70,28 +70,8 @@ export async function POST(
       }
     }
 
-    // Always generate magic link and send welcome email
-    // Fall back to hardcoded production URL if env var is missing
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://difw-designer-talent-portal.vercel.app'
-
-    const { data: linkData, error: linkError } = await service.auth.admin.generateLink({
-      type: 'magiclink',
-      email: app.email,
-      options: {
-        redirectTo: `${appUrl}/members/setup`,
-      },
-    })
-
-    if (linkError || !linkData?.properties?.action_link) {
-      console.error('Magic link generation error:', linkError)
-      return NextResponse.json({
-        success: true,
-        emailSent: false,
-        emailError: linkError?.message ?? 'Magic link generation returned no link',
-      })
-    }
-
-    await sendMemberWelcome(app.email, app.full_name, linkData.properties.action_link)
+    // Send welcome email (non-blocking)
+    sendMemberWelcome(app.email, app.full_name).catch(console.error)
 
     return NextResponse.json({ success: true, emailSent: true })
   } catch (err) {

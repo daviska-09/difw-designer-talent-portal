@@ -115,12 +115,9 @@ export async function sendMembershipRejection(to: string, firstName: string) {
   })
 }
 
-export async function sendMemberWelcome(
-  to: string,
-  fullName: string,
-  magicLink: string
-) {
+export async function sendMemberWelcome(to: string, fullName: string) {
   const firstName = fullName.split(' ')[0]
+  const setupUrl = `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`
   return getResend().emails.send({
     from: FROM,
     replyTo: REPLY_TO,
@@ -130,11 +127,28 @@ export async function sendMemberWelcome(
       <h1 style="margin:0 0 4px;">Welcome to DIFW,</h1>
       <h1 style="margin:0 0 32px;">${firstName}.</h1>
       <p>Your payment has been confirmed and your membership is now active.</p>
-      <p>Please click the link below to create your account and access the DIFW Portal. This link expires in 24 hours and can only be used once.</p>
-      <a href="${magicLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Access DIFW Portal</a>
+      <p>Click the button below to set up your account and access the DIFW Portal.</p>
+      <a href="${setupUrl}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Set Up Your Account</a>
       <p style="margin-top:40px;">Here, you can:</p>
       <p style="color:#555;">— Access the DIFW Talent Directory<br>— Stay up to date with events, announcements, and opportunities exclusive to DIFW members<br>— Manage your DIFW membership account</p>
       <p>Thank you for being part of the DIFW community, we're excited to have you with us. Let's change the future of fashion together.</p>
+    `),
+  })
+}
+
+export async function sendAccessLink(to: string, fullName: string, magicLink: string) {
+  const firstName = fullName.split(' ')[0]
+  return getResend().emails.send({
+    from: FROM,
+    replyTo: REPLY_TO,
+    to,
+    subject: 'DIFW Portal — Your Sign-In Link',
+    html: emailWrapper(`
+      <h1>Sign In to DIFW</h1>
+      <p>Hi ${firstName},</p>
+      <p>Click the button below to sign in to your DIFW member account and set up your password.</p>
+      <a href="${magicLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Sign In to DIFW Portal</a>
+      <p style="margin-top:40px;font-size:12px;color:#888;">This link expires in 1 hour and can only be used once. If you did not request this, you can ignore this email.</p>
     `),
   })
 }

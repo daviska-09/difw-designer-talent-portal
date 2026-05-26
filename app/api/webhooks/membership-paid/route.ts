@@ -61,24 +61,8 @@ export async function POST(request: NextRequest) {
       membership_tier: membership_tier ?? null,
     })
 
-    // Generate magic link for first login
-    const { data: linkData, error: linkError } = await service.auth.admin.generateLink({
-      type: 'magiclink',
-      email,
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/members/setup`,
-      },
-    })
-
-    if (linkError || !linkData?.properties?.action_link) {
-      console.error('Magic link generation error:', linkError)
-      return NextResponse.json({ error: 'Failed to generate magic link' }, { status: 500 })
-    }
-
-    const magicLink = linkData.properties.action_link
-
-    // Send welcome email with magic link
-    await sendMemberWelcome(email, full_name, magicLink)
+    // Send welcome email
+    await sendMemberWelcome(email, full_name)
 
     // Write Supabase User ID back to Airtable
     if (airtable_record_id) {
