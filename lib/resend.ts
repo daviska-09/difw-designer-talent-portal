@@ -35,7 +35,7 @@ export async function sendTalentApproval(to: string, fullName: string) {
       <h1>You're In</h1>
       <p>Hi ${firstName},</p>
       <p>Your submission to the DIFW Talent Directory has been approved. Your profile is now visible to DIFW members when they are selecting creatives to work with.</p>
-      <p>If you need to update any of your details or portfolio links, reply to this email or contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
+      <p>If you need to update any of your details or portfolio links, contact us at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
     `),
   })
 }
