@@ -11,6 +11,7 @@ export default async function MembersTalentPage() {
     .from('talent_applications')
     .select('*')
     .eq('status', 'approved')
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   return <TalentDirectoryClient initialTalent={talent ?? []} />
