@@ -49,15 +49,27 @@ export async function POST(
         return NextResponse.json({ error: 'Failed to create user account' }, { status: 500 })
       }
 
-      if (!authError && authData?.user) {
-        await service.from('members').insert({
-          id: authData.user.id,
-          full_name: app.full_name,
-          brand_name: app.brand_name,
-          email: app.email,
-          membership_tier: app.membership_tier,
-          membership_application_id: app.id,
-        })
+      let userId = authData?.user?.id ?? null
+
+      if (!userId && authError?.code === 'email_exists') {
+        // User already exists — find their ID
+        const { data: { users } } = await service.auth.admin.listUsers()
+        userId = users.find(u => u.email === app.email)?.id ?? null
+      }
+
+      if (userId) {
+        const { data: existing } = await service.from('members').select('id').eq('id', userId).single()
+        if (!existing) {
+          const { error: memberInsertError } = await service.from('members').insert({
+            id: userId,
+            full_name: app.full_name,
+            brand_name: app.brand_name,
+            email: app.email,
+            membership_tier: app.membership_tier,
+            membership_application_id: app.id,
+          })
+          if (memberInsertError) console.error('Members insert error:', memberInsertError)
+        }
       }
 
       await service

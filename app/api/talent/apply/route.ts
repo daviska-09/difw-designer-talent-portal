@@ -55,6 +55,17 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServiceClient()
+
+    const { data: existing } = await supabase
+      .from('talent_applications')
+      .select('id')
+      .eq('email', email)
+      .limit(1)
+      .single()
+    if (existing) {
+      return NextResponse.json({ error: 'A submission already exists for this email.' }, { status: 409 })
+    }
+
     const applicationId = crypto.randomUUID()
     const safeName = full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     const folder = `${safeName}-${applicationId.slice(0, 8)}`
