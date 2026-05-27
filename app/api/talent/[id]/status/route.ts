@@ -47,10 +47,13 @@ export async function PATCH(
     }
 
     // Send email
-    if (status === 'approved') {
-      sendTalentApproval(app.email, app.full_name).catch(console.error)
-    } else {
-      sendTalentRejection(app.email, app.full_name).catch(console.error)
+    try {
+      const emailResult = status === 'approved'
+        ? await sendTalentApproval(app.email, app.full_name)
+        : await sendTalentRejection(app.email, app.full_name)
+      console.log('Resend talent result:', JSON.stringify(emailResult))
+    } catch (emailErr) {
+      console.error('Resend talent error:', emailErr)
     }
 
     return NextResponse.json({ success: true })
