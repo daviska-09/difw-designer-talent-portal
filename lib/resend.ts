@@ -153,6 +153,21 @@ export async function sendAccessLink(to: string, fullName: string, magicLink: st
   })
 }
 
+export async function sendAdminPasswordReset(to: string, resetLink: string) {
+  return getResend().emails.send({
+    from: FROM,
+    replyTo: REPLY_TO,
+    to,
+    subject: '[DIFW] Reset Your Admin Password',
+    html: emailWrapper(`
+      <h1>Admin Password Reset</h1>
+      <p>A password reset was requested for this admin account. Click the button below to set a new password.</p>
+      <a href="${resetLink}" style="display:inline-block;background:#000;color:#fff;padding:14px 32px;font-family:sans-serif;font-weight:700;font-size:11px;letter-spacing:3px;text-decoration:none;text-transform:uppercase;margin-top:8px;">Reset Password</a>
+      <p style="margin-top:40px;font-size:12px;color:#888;">This link expires in 1 hour and can only be used once. If you did not request a password reset, please contact your team immediately at <a href="mailto:info@dublin-ifw.com" style="color:#888;">info@dublin-ifw.com</a>.</p>
+    `),
+  })
+}
+
 // ── Shared wrapper ───────────────────────────────────────────
 
 function emailWrapper(body: string): string {

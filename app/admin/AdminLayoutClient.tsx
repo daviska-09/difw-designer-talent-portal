@@ -15,7 +15,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
     router.push('/admin/login')
   }
 
-  if (pathname === '/admin/login') {
+  if (pathname === '/admin/login' || pathname === '/admin/forgot-password') {
     return <div className="min-h-screen bg-black">{children}</div>
   }
 
@@ -59,6 +59,16 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
             }`}
           >
             Posts
+          </Link>
+          <Link
+            href="/admin/team"
+            className={`px-4 py-3 font-display text-sm tracking-[3px] uppercase transition-colors ${
+              pathname.startsWith('/admin/team')
+                ? 'bg-white text-black'
+                : 'text-white hover:bg-[#111]'
+            }`}
+          >
+            Team
           </Link>
         </nav>
 
