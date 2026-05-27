@@ -35,12 +35,18 @@ export async function GET(request: NextRequest) {
       options: { redirectTo: `${appUrl}/members/setup` },
     })
 
-    if (error || !linkData?.properties?.action_link) {
+    if (error || !linkData?.properties?.hashed_token) {
       console.error('Generate link error:', error)
       return NextResponse.redirect(new URL('/members/setup?error=invalid', request.url))
     }
 
-    return NextResponse.redirect(linkData.properties.action_link)
+    // Route through /auth/confirm so the SSR client sets the session cookie properly
+    const confirmUrl = new URL('/auth/confirm', request.url)
+    confirmUrl.searchParams.set('token_hash', linkData.properties.hashed_token)
+    confirmUrl.searchParams.set('type', 'magiclink')
+    confirmUrl.searchParams.set('next', '/members/setup')
+
+    return NextResponse.redirect(confirmUrl)
   } catch (err) {
     console.error('Auth access error:', err)
     return NextResponse.redirect(new URL('/members/setup?error=invalid', request.url))
