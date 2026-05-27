@@ -11,47 +11,79 @@ interface AnnouncementsFeedProps {
   initialTotal: number
 }
 
-// Strip [text](url) markdown to plain text for the preview card
 function stripLinks(text: string): string {
   return text.replace(/\[(.+?)\]\(https?:\/\/[^\s)]+\)/g, '$1')
 }
 
-function PostCard({ post, onClick }: { post: Post; onClick: () => void }) {
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString('en-IE', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function FeaturedPost({ post, onClick }: { post: Post; onClick: () => void }) {
   const plain = stripLinks(post.body_text)
-  const preview = plain.length > 150 ? plain.slice(0, 150).trimEnd() + '…' : plain
+  const preview = plain.length > 220 ? plain.slice(0, 220).trimEnd() + '…' : plain
 
   return (
     <button
       onClick={onClick}
-      className="w-full text-left border border-white hover:bg-[#050505] transition-colors group flex items-stretch"
+      className="w-full text-left border border-white hover:bg-[#050505] transition-colors group flex flex-col md:flex-row min-h-[360px] mb-12"
     >
-      <div className="flex-1 p-6">
-        {/* Date */}
-        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
-          {new Date(post.published_at).toLocaleDateString('en-IE', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })}
-        </p>
-
-        {/* Headline */}
-        <h2 className="font-display text-2xl tracking-[3px] uppercase text-white mb-3 leading-tight">
-          {post.headline}
-        </h2>
-
-        {/* Preview */}
-        <p className="text-white text-sm leading-relaxed">
-          {preview}{' '}
-          {plain.length > 150 && (
-            <span className="underline underline-offset-2">Read More</span>
-          )}
-        </p>
+      {/* Image — left 50% on desktop, top on mobile */}
+      <div className="w-full md:w-1/2 flex-shrink-0 bg-[#111] overflow-hidden aspect-video md:aspect-auto">
+        {post.feature_photo_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={post.feature_photo_url}
+            alt=""
+            className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
+          />
+        ) : null}
       </div>
 
-      {/* Feature photo — fixed-size thumbnail on the right */}
+      {/* Text — right 50% on desktop, below on mobile */}
+      <div className="flex-1 p-8 flex flex-col justify-center">
+        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-3">
+          {formatDate(post.published_at)}
+        </p>
+        <h2 className="font-display text-3xl tracking-[3px] uppercase text-white mb-4 leading-tight">
+          {post.headline}
+        </h2>
+        <p className="text-white/80 text-sm leading-relaxed mb-6">{preview}</p>
+        <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white underline underline-offset-2">
+          Read More
+        </span>
+      </div>
+    </button>
+  )
+}
+
+function PostListItem({ post, onClick }: { post: Post; onClick: () => void }) {
+  const plain = stripLinks(post.body_text)
+  const preview = plain.length > 120 ? plain.slice(0, 120).trimEnd() + '…' : plain
+
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left border-b border-[#1a1a1a] hover:bg-[#050505] transition-colors group flex flex-col md:flex-row gap-6 py-6"
+    >
+      {/* Text — left 70% on desktop, below on mobile */}
+      <div className="flex-1 order-last md:order-first">
+        <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-2">
+          {formatDate(post.published_at)}
+        </p>
+        <h3 className="font-display text-xl tracking-[3px] uppercase text-white mb-2 leading-tight">
+          {post.headline}
+        </h3>
+        <p className="text-white/60 text-sm leading-relaxed">{preview}</p>
+      </div>
+
+      {/* Thumbnail — right 30% on desktop, top on mobile */}
       {post.feature_photo_url && (
-        <div className="w-40 h-40 flex-shrink-0 bg-[#111] overflow-hidden self-stretch">
+        <div className="w-full md:w-[30%] h-40 md:h-32 flex-shrink-0 bg-[#111] overflow-hidden order-first md:order-last">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={post.feature_photo_url}
@@ -73,6 +105,8 @@ export function AnnouncementsFeed({ initialPosts, initialTotal }: AnnouncementsF
   const [pageError, setPageError] = useState<string | null>(null)
 
   const totalPages = Math.ceil(total / PER_PAGE)
+  const featured = page === 1 ? posts[0] ?? null : null
+  const feedPosts = page === 1 ? posts.slice(1) : posts
 
   async function loadPage(newPage: number) {
     setLoadingPage(true)
@@ -116,14 +150,21 @@ export function AnnouncementsFeed({ initialPosts, initialTotal }: AnnouncementsF
       {loadingPage ? (
         <div className="py-16 text-center text-white text-sm font-ui">Loading…</div>
       ) : (
-        <div className="flex flex-col gap-6">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} onClick={() => setSelectedPost(post)} />
-          ))}
-        </div>
+        <>
+          {featured && (
+            <FeaturedPost post={featured} onClick={() => setSelectedPost(featured)} />
+          )}
+
+          {feedPosts.length > 0 && (
+            <div className="border-t border-[#1a1a1a]">
+              {feedPosts.map((post) => (
+                <PostListItem key={post.id} post={post} onClick={() => setSelectedPost(post)} />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && !loadingPage && (
         <div className="flex items-center justify-between mt-10 pt-8 border-t border-white">
           <span className="text-xs text-white font-ui tracking-[1px]">
