@@ -263,7 +263,7 @@ export function MembershipApplicationForm() {
         />
         <Input
           label="Website"
-          type="url"
+          type="text"
           value={fields.website_url}
           onChange={(e) => set('website_url', e.target.value)}
           placeholder="https://"

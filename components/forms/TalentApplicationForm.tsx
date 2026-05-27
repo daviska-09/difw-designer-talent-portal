@@ -282,7 +282,7 @@ export function TalentApplicationForm() {
 
         <Input
           label="Portfolio Link *"
-          type="url"
+          type="text"
           value={fields.portfolio_url}
           onChange={(e) => set('portfolio_url', e.target.value)}
           required
