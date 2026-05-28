@@ -2,11 +2,19 @@ import { Modal } from '@/components/ui/Modal'
 import type { TalentApplication } from '@/lib/types'
 
 const SERVICE_LABELS: Record<string, string> = {
+  model: 'Model',
   photographer: 'Photographer',
   videographer: 'Videographer',
-  model: 'Model',
+  content_creator: 'Content Creator',
   stylist: 'Stylist',
+  hair_stylist: 'Hair Stylist',
   mua: 'MUA',
+  production_crew: 'Production Crew',
+  backstage_assistant: 'Backstage Assistant',
+  lighting_technician: 'Lighting Technician',
+  sound_technician: 'Sound Technician',
+  dj_musician: 'DJ / Musician',
+  performer: 'Performer',
   other: 'Other',
 }
 
@@ -54,6 +62,13 @@ export function TalentProfileModal({ talent, onClose }: Props) {
         <div className="border-t border-[#1a1a1a] pt-6 space-y-4">
           <div>
             <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
+              Location
+            </p>
+            <p className="text-white text-sm">{talent.location}</p>
+          </div>
+
+          <div>
+            <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
               Email
             </p>
             <a
@@ -63,6 +78,29 @@ export function TalentProfileModal({ talent, onClose }: Props) {
               {talent.email}
             </a>
           </div>
+
+          {talent.phone && (
+            <div>
+              <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
+                Phone
+              </p>
+              <a
+                href={`tel:${talent.phone}`}
+                className="text-white text-sm hover:text-white transition-colors"
+              >
+                {talent.phone}
+              </a>
+            </div>
+          )}
+
+          {talent.instagram_website && (
+            <div>
+              <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
+                Instagram / Website
+              </p>
+              <p className="text-white text-sm break-all">{talent.instagram_website}</p>
+            </div>
+          )}
 
           {talent.portfolio_url && (
             <div>
