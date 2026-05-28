@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { waitUntil } from '@vercel/functions'
 import { createServiceClient } from '@/lib/supabase/server'
 import { syncTalentToAirtable } from '@/lib/airtable'
 import { sendTalentConfirmation } from '@/lib/resend'
@@ -115,8 +116,8 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Send confirmation email (non-blocking)
-    sendTalentConfirmation(email, full_name).catch(console.error)
+    // Send confirmation email (non-blocking, kept alive after response)
+    waitUntil(sendTalentConfirmation(email, full_name).catch(console.error))
 
     return NextResponse.json({ success: true, id: data.id })
   } catch (err) {
