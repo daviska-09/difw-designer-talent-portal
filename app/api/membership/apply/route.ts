@@ -129,8 +129,12 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Send confirmation email (non-blocking)
-    sendMembershipConfirmation(email, full_name).catch(console.error)
+    // Send confirmation email
+    try {
+      await sendMembershipConfirmation(email, full_name)
+    } catch (emailErr) {
+      console.error('Membership confirmation email error:', emailErr)
+    }
 
     return NextResponse.json({ success: true, id: data.id })
   } catch (err) {

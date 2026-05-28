@@ -115,8 +115,12 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Send confirmation email (non-blocking)
-    sendTalentConfirmation(email, full_name).catch(console.error)
+    // Send confirmation email
+    try {
+      await sendTalentConfirmation(email, full_name)
+    } catch (emailErr) {
+      console.error('Talent confirmation email error:', emailErr)
+    }
 
     return NextResponse.json({ success: true, id: data.id })
   } catch (err) {
