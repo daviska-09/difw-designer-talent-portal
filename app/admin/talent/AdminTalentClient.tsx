@@ -62,6 +62,11 @@ export function AdminTalentClient({
     setSelectedApp(null)
   }
 
+  function handleUpdate(updated: TalentApplication) {
+    setApplications((prev) => prev.map((a) => (a.id === updated.id ? updated : a)))
+    setSelectedApp(updated)
+  }
+
   const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
   const deleted = useMemo(() => applications.filter((a) => !!a.deleted_at), [applications])
 
@@ -203,6 +208,7 @@ export function AdminTalentClient({
           onStatusChange={handleStatusChange}
           onDelete={handleDelete}
           onRecover={handleRecover}
+          onUpdate={handleUpdate}
         />
       )}
     </div>

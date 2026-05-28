@@ -116,6 +116,26 @@ textarea.input-base:focus {
   caret-color: #000;
 }
 
+/* Admin edit inputs (dark theme inline editing) */
+.admin-edit-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #333;
+  color: #fff;
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.875rem;
+  padding: 6px 0;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.admin-edit-input:focus {
+  border-bottom-color: #fff;
+}
+.admin-edit-input::placeholder {
+  color: #555;
+}
+
 /* Error state for inputs */
 .input-base.input-error {
   border-bottom-color: #cc0000;
