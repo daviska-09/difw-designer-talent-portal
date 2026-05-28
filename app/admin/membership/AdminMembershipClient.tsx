@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import type { MembershipApplication, MembershipStatus, MembershipTier } from '@/lib/types'
+import type { MembershipApplication, MembershipStatus, MembershipTier, DIFW26Participation } from '@/lib/types'
 
 const TIER_OPTIONS: MembershipTier[] = ['emerging_designer', 'established_designer', 'signature_designer', 'producer']
 
@@ -112,7 +112,7 @@ interface EditState {
   instagram: string
   website_url: string
   membership_tier: MembershipTier
-  difw26_participation: string
+  difw26_participation: DIFW26Participation
   about_work: string
   why_join: string
   headshot_url: string
@@ -131,7 +131,7 @@ function toEditState(app: MembershipApplication): EditState {
     instagram: app.instagram ?? '',
     website_url: app.website_url ?? '',
     membership_tier: app.membership_tier as MembershipTier,
-    difw26_participation: app.difw26_participation,
+    difw26_participation: app.difw26_participation as DIFW26Participation,
     about_work: app.about_work,
     why_join: app.why_join,
     headshot_url: app.headshot_url ?? '',
@@ -450,7 +450,7 @@ function DetailPanel({
                 </EditField>
                 <EditField label="DIFW26 Participation">
                   <div className="flex gap-2 mt-1">
-                    {(['yes', 'no', 'unsure'] as const).map((v) => (
+                    {(['yes', 'no', 'unsure'] as DIFW26Participation[]).map((v) => (
                       <button
                         key={v}
                         type="button"
