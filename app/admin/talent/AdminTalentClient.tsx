@@ -7,22 +7,38 @@ import { TalentDetailPanel } from '@/components/admin/TalentDetailPanel'
 import type { TalentApplication, TalentStatus, ServiceType } from '@/lib/types'
 
 const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
+  { value: 'model', label: 'Model' },
   { value: 'photographer', label: 'Photographer' },
   { value: 'videographer', label: 'Videographer' },
-  { value: 'model', label: 'Model' },
+  { value: 'content_creator', label: 'Content Creator' },
   { value: 'stylist', label: 'Stylist' },
+  { value: 'hair_stylist', label: 'Hair Stylist' },
   { value: 'mua', label: 'MUA' },
+  { value: 'production_crew', label: 'Production Crew' },
+  { value: 'backstage_assistant', label: 'Backstage Assistant' },
+  { value: 'lighting_technician', label: 'Lighting Technician' },
+  { value: 'sound_technician', label: 'Sound Technician' },
+  { value: 'dj_musician', label: 'DJ / Musician' },
+  { value: 'performer', label: 'Performer' },
   { value: 'other', label: 'Other' },
 ]
 
 const STATUS_OPTIONS: TalentStatus[] = ['pending', 'approved', 'rejected']
 
 const SERVICE_LABELS: Record<string, string> = {
+  model: 'Model',
   photographer: 'Photographer',
   videographer: 'Videographer',
-  model: 'Model',
+  content_creator: 'Content Creator',
   stylist: 'Stylist',
+  hair_stylist: 'Hair Stylist',
   mua: 'MUA',
+  production_crew: 'Production Crew',
+  backstage_assistant: 'Backstage Assistant',
+  lighting_technician: 'Lighting Technician',
+  sound_technician: 'Sound Technician',
+  dj_musician: 'DJ / Musician',
+  performer: 'Performer',
   other: 'Other',
 }
 
