@@ -103,24 +103,66 @@ function ApproveModal({
 
 // ── Detail Panel ──────────────────────────────────────────────
 
+interface EditState {
+  full_name: string
+  brand_name: string
+  location: string
+  email: string
+  phone: string
+  instagram: string
+  website_url: string
+  membership_tier: MembershipTier
+  difw26_participation: string
+  about_work: string
+  why_join: string
+  headshot_url: string
+  logo_url: string
+  emerging_proof_url: string
+  supporting_docs_url: string
+}
+
+function toEditState(app: MembershipApplication): EditState {
+  return {
+    full_name: app.full_name,
+    brand_name: app.brand_name,
+    location: app.location,
+    email: app.email,
+    phone: app.phone,
+    instagram: app.instagram ?? '',
+    website_url: app.website_url ?? '',
+    membership_tier: app.membership_tier as MembershipTier,
+    difw26_participation: app.difw26_participation,
+    about_work: app.about_work,
+    why_join: app.why_join,
+    headshot_url: app.headshot_url ?? '',
+    logo_url: app.logo_url,
+    emerging_proof_url: app.emerging_proof_url ?? '',
+    supporting_docs_url: app.supporting_docs_url ?? '',
+  }
+}
+
 function DetailPanel({
   app,
   onClose,
   onStatusChange,
   onDelete,
   onRecover,
+  onUpdate,
 }: {
   app: MembershipApplication
   onClose: () => void
   onStatusChange: (id: string, status: MembershipStatus) => void
   onDelete: (id: string) => void
   onRecover: (id: string) => void
+  onUpdate: (updated: MembershipApplication) => void
 }) {
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showApproveModal, setShowApproveModal] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [editState, setEditState] = useState<EditState>(() => toEditState(app))
 
   const isDeleted = !!app.deleted_at
 
@@ -185,17 +227,61 @@ function DetailPanel({
     }
   }
 
+  function handleCancelEdit() {
+    setEditState(toEditState(app))
+    setEditing(false)
+    setError(null)
+  }
+
+  async function handleSave() {
+    setLoading('save')
+    setError(null)
+    try {
+      const payload = {
+        full_name: editState.full_name.trim(),
+        brand_name: editState.brand_name.trim(),
+        location: editState.location.trim(),
+        email: editState.email.trim(),
+        phone: editState.phone.trim(),
+        instagram: editState.instagram.trim() || null,
+        website_url: editState.website_url.trim() || null,
+        membership_tier: editState.membership_tier,
+        difw26_participation: editState.difw26_participation,
+        about_work: editState.about_work.trim(),
+        why_join: editState.why_join.trim(),
+        headshot_url: editState.headshot_url.trim() || null,
+        logo_url: editState.logo_url.trim(),
+        emerging_proof_url: editState.emerging_proof_url.trim() || null,
+        supporting_docs_url: editState.supporting_docs_url.trim() || null,
+      }
+      const res = await fetch(`/api/membership/${app.id}/update`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      if (!res.ok) throw new Error('Save failed')
+      onUpdate({ ...app, ...payload })
+      setEditing(false)
+    } catch {
+      setError('Failed to save changes. Try again.')
+    } finally {
+      setLoading(null)
+    }
+  }
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex">
-        {!fullscreen && <div className="flex-1 bg-black/60" onClick={onClose} />}
+        {!fullscreen && <div className="flex-1 bg-black/60" onClick={editing ? undefined : onClose} />}
 
         <div className={`bg-black border-l border-[#1a1a1a] overflow-y-auto flex flex-col transition-all ${fullscreen ? 'w-full' : 'w-full max-w-lg'}`}>
 
           {/* Header */}
           <div className="flex items-start justify-between px-8 py-6 border-b border-[#1a1a1a] sticky top-0 bg-black z-10">
             <div>
-              <p className="font-display text-xl tracking-[2px] uppercase">{app.full_name}</p>
+              <p className="font-display text-xl tracking-[2px] uppercase">
+                {editing ? editState.full_name : app.full_name}
+              </p>
               <div className="mt-2 flex items-center gap-3">
                 {isDeleted ? (
                   <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#CC0000]">Deleted</span>
@@ -203,7 +289,7 @@ function DetailPanel({
                   <StatusBadge status={app.status as MembershipStatus} />
                 )}
                 <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">
-                  {TIER_LABELS[app.membership_tier as MembershipTier] ?? app.membership_tier}
+                  {TIER_LABELS[editing ? editState.membership_tier : app.membership_tier as MembershipTier] ?? app.membership_tier}
                 </span>
               </div>
             </div>
@@ -215,7 +301,12 @@ function DetailPanel({
               >
                 {fullscreen ? '⤡' : '⤢'}
               </button>
-              <button onClick={onClose} className="text-white text-2xl leading-none">×</button>
+              <button
+                onClick={editing ? undefined : onClose}
+                className={`text-2xl leading-none transition-colors ${editing ? 'text-[#555] cursor-default' : 'text-white hover:text-white'}`}
+              >
+                ×
+              </button>
             </div>
           </div>
 
@@ -225,6 +316,15 @@ function DetailPanel({
               <Button onClick={handleRecover} loading={loading === 'recover'} disabled={!!loading}>
                 Recover
               </Button>
+            ) : editing ? (
+              <>
+                <Button onClick={handleSave} loading={loading === 'save'} disabled={!!loading}>
+                  Save Changes
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit} disabled={!!loading}>
+                  Cancel
+                </Button>
+              </>
             ) : (
               <>
                 {app.status === 'pending' && (
@@ -262,30 +362,40 @@ function DetailPanel({
                         </button>
                       )}
                     </div>
-                    <Button variant="outline" onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading} className="self-start text-xs px-4 py-2">
-                      Resend Welcome Email
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button variant="outline" onClick={handleActivate} loading={loading === 'activate'} disabled={!!loading} className="self-start text-xs px-4 py-2">
+                        Resend Welcome Email
+                      </Button>
+                      <Button variant="outline" onClick={() => setEditing(true)} disabled={!!loading}>
+                        Edit
+                      </Button>
+                    </div>
                   </div>
                 )}
                 {app.status === 'rejected' && (
                   <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white">Rejected</p>
                 )}
                 {app.status !== 'paid' && (
-                  confirmingDelete ? (
-                    <>
-                      <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white self-center">Delete?</span>
-                      <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
-                        Confirm
-                      </Button>
-                      <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
-                      Delete
+                  <>
+                    <Button variant="outline" onClick={() => setEditing(true)} disabled={!!loading}>
+                      Edit
                     </Button>
-                  )
+                    {confirmingDelete ? (
+                      <>
+                        <span className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white self-center">Delete?</span>
+                        <Button variant="outline" onClick={handleDelete} loading={loading === 'delete'} disabled={!!loading}>
+                          Confirm
+                        </Button>
+                        <Button variant="ghost" onClick={() => setConfirmingDelete(false)} disabled={!!loading}>
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
+                        Delete
+                      </Button>
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -299,50 +409,128 @@ function DetailPanel({
 
           {/* Fields */}
           <div className="px-8 py-8 space-y-7">
-            <Field label="Brand">{app.brand_name}</Field>
-            <Field label="Location">{app.location}</Field>
-            <Field label="Email">
-              <a href={`mailto:${app.email}`} className="text-white text-sm hover:text-white transition-colors">{app.email}</a>
-            </Field>
-            <Field label="Phone">{app.phone}</Field>
-            {app.instagram && <Field label="Instagram">{app.instagram}</Field>}
-            {app.website_url && (
-              <Field label="Website">
-                <a href={app.website_url} target="_blank" rel="noopener noreferrer" className="text-white text-sm hover:text-white transition-colors break-all">{app.website_url}</a>
-              </Field>
-            )}
-            <Field label="DIFW26">
-              <span className="capitalize text-white text-sm">{app.difw26_participation}</span>
-            </Field>
-            <Field label="About Their Work">
-              <p className="text-white text-sm leading-relaxed font-light">{app.about_work}</p>
-            </Field>
-            <Field label="Why Join DIFW">
-              <p className="text-white text-sm leading-relaxed font-light">{app.why_join}</p>
-            </Field>
-            <Field label="Uploads">
-              <div className="flex flex-wrap gap-4 mt-1">
-                {app.headshot_url && <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Headshot</a>}
-                <a href={app.logo_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Logo</a>
-                {app.emerging_proof_url && (
-                  <a href={app.emerging_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Eligibility Proof</a>
+            {editing ? (
+              <>
+                <EditField label="Full Name">
+                  <input className="admin-edit-input" value={editState.full_name} onChange={(e) => setEditState((p) => ({ ...p, full_name: e.target.value }))} />
+                </EditField>
+                <EditField label="Brand Name">
+                  <input className="admin-edit-input" value={editState.brand_name} onChange={(e) => setEditState((p) => ({ ...p, brand_name: e.target.value }))} />
+                </EditField>
+                <EditField label="Location">
+                  <input className="admin-edit-input" value={editState.location} onChange={(e) => setEditState((p) => ({ ...p, location: e.target.value }))} />
+                </EditField>
+                <EditField label="Email">
+                  <input className="admin-edit-input" type="email" value={editState.email} onChange={(e) => setEditState((p) => ({ ...p, email: e.target.value }))} />
+                </EditField>
+                <EditField label="Phone">
+                  <input className="admin-edit-input" value={editState.phone} onChange={(e) => setEditState((p) => ({ ...p, phone: e.target.value }))} />
+                </EditField>
+                <EditField label="Instagram">
+                  <input className="admin-edit-input" value={editState.instagram} onChange={(e) => setEditState((p) => ({ ...p, instagram: e.target.value }))} placeholder="Optional" />
+                </EditField>
+                <EditField label="Website">
+                  <input className="admin-edit-input" value={editState.website_url} onChange={(e) => setEditState((p) => ({ ...p, website_url: e.target.value }))} placeholder="Optional" />
+                </EditField>
+                <EditField label="Membership Tier">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {TIER_OPTIONS.map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setEditState((p) => ({ ...p, membership_tier: t }))}
+                        className={`text-xs tracking-[2px] uppercase font-ui font-semibold border px-2 py-1 transition-colors ${
+                          editState.membership_tier === t ? 'border-white bg-white text-black' : 'border-[#555] text-[#555]'
+                        }`}
+                      >
+                        {TIER_LABELS[t]}
+                      </button>
+                    ))}
+                  </div>
+                </EditField>
+                <EditField label="DIFW26 Participation">
+                  <div className="flex gap-2 mt-1">
+                    {(['yes', 'no', 'unsure'] as const).map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => setEditState((p) => ({ ...p, difw26_participation: v }))}
+                        className={`text-xs tracking-[2px] uppercase font-ui font-semibold border px-2 py-1 transition-colors capitalize ${
+                          editState.difw26_participation === v ? 'border-white bg-white text-black' : 'border-[#555] text-[#555]'
+                        }`}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
+                </EditField>
+                <EditField label="About Their Work">
+                  <textarea className="admin-edit-input resize-none" rows={5} value={editState.about_work} onChange={(e) => setEditState((p) => ({ ...p, about_work: e.target.value }))} />
+                </EditField>
+                <EditField label="Why Join DIFW">
+                  <textarea className="admin-edit-input resize-none" rows={5} value={editState.why_join} onChange={(e) => setEditState((p) => ({ ...p, why_join: e.target.value }))} />
+                </EditField>
+                <EditField label="Headshot URL">
+                  <input className="admin-edit-input" value={editState.headshot_url} onChange={(e) => setEditState((p) => ({ ...p, headshot_url: e.target.value }))} placeholder="Optional" />
+                </EditField>
+                <EditField label="Logo URL">
+                  <input className="admin-edit-input" value={editState.logo_url} onChange={(e) => setEditState((p) => ({ ...p, logo_url: e.target.value }))} />
+                </EditField>
+                <EditField label="Eligibility Proof URL">
+                  <input className="admin-edit-input" value={editState.emerging_proof_url} onChange={(e) => setEditState((p) => ({ ...p, emerging_proof_url: e.target.value }))} placeholder="Optional" />
+                </EditField>
+                <EditField label="Supporting Docs URL">
+                  <input className="admin-edit-input" value={editState.supporting_docs_url} onChange={(e) => setEditState((p) => ({ ...p, supporting_docs_url: e.target.value }))} placeholder="Optional" />
+                </EditField>
+              </>
+            ) : (
+              <>
+                <Field label="Brand">{app.brand_name}</Field>
+                <Field label="Location">{app.location}</Field>
+                <Field label="Email">
+                  <a href={`mailto:${app.email}`} className="text-white text-sm hover:text-white transition-colors">{app.email}</a>
+                </Field>
+                <Field label="Phone">{app.phone}</Field>
+                {app.instagram && <Field label="Instagram">{app.instagram}</Field>}
+                {app.website_url && (
+                  <Field label="Website">
+                    <a href={app.website_url} target="_blank" rel="noopener noreferrer" className="text-white text-sm hover:text-white transition-colors break-all">{app.website_url}</a>
+                  </Field>
                 )}
-                {app.supporting_docs_url && (
-                  <a href={app.supporting_docs_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Supporting Docs</a>
+                <Field label="DIFW26">
+                  <span className="capitalize text-white text-sm">{app.difw26_participation}</span>
+                </Field>
+                <Field label="About Their Work">
+                  <p className="text-white text-sm leading-relaxed font-light">{app.about_work}</p>
+                </Field>
+                <Field label="Why Join DIFW">
+                  <p className="text-white text-sm leading-relaxed font-light">{app.why_join}</p>
+                </Field>
+                <Field label="Uploads">
+                  <div className="flex flex-wrap gap-4 mt-1">
+                    {app.headshot_url && <a href={app.headshot_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Headshot</a>}
+                    <a href={app.logo_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Logo</a>
+                    {app.emerging_proof_url && (
+                      <a href={app.emerging_proof_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Eligibility Proof</a>
+                    )}
+                    {app.supporting_docs_url && (
+                      <a href={app.supporting_docs_url} target="_blank" rel="noopener noreferrer" className="text-xs tracking-[1px] uppercase font-ui text-white border border-white px-3 py-1.5 hover:border-white transition-colors">Supporting Docs</a>
+                    )}
+                  </div>
+                </Field>
+                <Field label="Submitted">
+                  <span className="text-white text-sm">
+                    {new Date(app.created_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </span>
+                </Field>
+                {app.deleted_at && (
+                  <Field label="Deleted">
+                    <span className="text-[#CC0000] text-sm">
+                      {new Date(app.deleted_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </span>
+                  </Field>
                 )}
-              </div>
-            </Field>
-            <Field label="Submitted">
-              <span className="text-white text-sm">
-                {new Date(app.created_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
-              </span>
-            </Field>
-            {app.deleted_at && (
-              <Field label="Deleted">
-                <span className="text-[#CC0000] text-sm">
-                  {new Date(app.deleted_at).toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </span>
-              </Field>
+              </>
             )}
           </div>
 
@@ -372,6 +560,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
+function EditField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#999] mb-2">{label}</p>
+      {children}
+    </div>
+  )
+}
+
 // ── Main Client ───────────────────────────────────────────────
 
 type FilterStatus = MembershipStatus | 'all' | 'deleted'
@@ -397,6 +594,11 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
   function handleRecover(id: string) {
     setApplications((prev) => prev.map((a) => (a.id === id ? { ...a, deleted_at: null } : a)))
     setSelectedApp(null)
+  }
+
+  function handleUpdate(updated: MembershipApplication) {
+    setApplications((prev) => prev.map((a) => (a.id === updated.id ? updated : a)))
+    setSelectedApp(updated)
   }
 
   const active = useMemo(() => applications.filter((a) => !a.deleted_at), [applications])
@@ -540,6 +742,7 @@ export function AdminMembershipClient({ initialApplications }: { initialApplicat
           onStatusChange={handleStatusChange}
           onDelete={handleDelete}
           onRecover={handleRecover}
+          onUpdate={handleUpdate}
         />
       )}
     </div>
