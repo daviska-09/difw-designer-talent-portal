@@ -192,7 +192,7 @@ export function TalentApplicationForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-10">
+    <form onSubmit={handleSubmit} noValidate className="space-y-10">
 
       {/* ── Personal Info ── */}
       <Input
