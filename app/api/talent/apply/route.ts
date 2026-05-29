@@ -2,15 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { syncTalentToAirtable } from '@/lib/airtable'
 import { sendTalentConfirmation } from '@/lib/resend'
+import { normalizeUrl } from '@/lib/normalizeUrl'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
-      full_name, business_name, location, email, phone, instagram_website,
-      services, services_other, portfolio_url, about_me, consent,
+      full_name, business_name, location, email, phone,
+      services, services_other, about_me, consent,
       headshot_url, supplementary_url,
     } = body
+    const portfolio_url = normalizeUrl(body.portfolio_url) ?? ''
+    const instagram_website = normalizeUrl(body.instagram_website)
 
     if (!full_name || !location || !email || !phone || !about_me || !consent) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })

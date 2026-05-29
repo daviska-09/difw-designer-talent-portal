@@ -2,16 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 import { syncMembershipToAirtable } from '@/lib/airtable'
 import { sendMembershipConfirmation } from '@/lib/resend'
+import { normalizeUrl } from '@/lib/normalizeUrl'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
-      full_name, brand_name, location, email, phone, instagram, website_url,
+      full_name, brand_name, location, email, phone,
       membership_tier, about_work, why_join, difw26_participation,
       values_agreement, consent_contact, consent_profile_sharing, consent_not_guaranteed,
       headshot_url, logo_url, supporting_docs_url, emerging_proof_url,
     } = body
+    const website_url = normalizeUrl(body.website_url)
+    const instagram = normalizeUrl(body.instagram)
 
     if (
       !full_name || !brand_name || !location || !email || !phone ||
