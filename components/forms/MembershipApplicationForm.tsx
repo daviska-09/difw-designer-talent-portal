@@ -3,7 +3,29 @@
 import { useState, useRef } from 'react'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { createClient } from '@/lib/supabase/client'
 import type { MembershipTier } from '@/lib/types'
+
+async function uploadFile(bucket: string, file: File, name: string, folder: string): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
+  const path = `${folder}/${name}.${ext}`
+
+  const res = await fetch('/api/upload-url', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bucket, path }),
+  })
+  const { token, path: confirmedPath, publicUrl, error } = await res.json()
+  if (!res.ok || !token) throw new Error(error ?? 'Failed to get upload URL')
+
+  const supabase = createClient()
+  const { error: uploadError } = await supabase.storage
+    .from(bucket)
+    .uploadToSignedUrl(confirmedPath, token, file)
+  if (uploadError) throw new Error(uploadError.message)
+
+  return publicUrl
+}
 
 const TIERS: { value: MembershipTier; label: string; price: string }[] = [
   { value: 'emerging_designer', label: 'Emerging Designer', price: '€110' },
@@ -158,28 +180,43 @@ export function MembershipApplicationForm() {
     setError(null)
 
     try {
-      const formData = new FormData()
-      formData.append('full_name', fields.full_name)
-      formData.append('brand_name', fields.brand_name)
-      formData.append('location', fields.location)
-      formData.append('email', fields.email)
-      formData.append('phone', fields.phone)
-      formData.append('instagram', fields.instagram)
-      formData.append('website_url', fields.website_url)
-      formData.append('membership_tier', tier)
-      formData.append('about_work', fields.about_work)
-      formData.append('why_join', fields.why_join)
-      formData.append('difw26_participation', fields.difw26)
-      formData.append('values_agreement', String(fields.values_agreement))
-      formData.append('consent_contact', String(fields.consent_contact))
-      formData.append('consent_profile_sharing', String(fields.consent_profile_sharing))
-      formData.append('consent_not_guaranteed', String(fields.consent_not_guaranteed))
-      if (files.headshot) formData.append('headshot', files.headshot)
-      formData.append('logo', files.logo)
-      if (files.supporting_docs) formData.append('supporting_docs', files.supporting_docs)
-      if (files.emerging_proof) formData.append('emerging_proof', files.emerging_proof)
+      const folder = crypto.randomUUID().slice(0, 8)
+      const headshot_url = files.headshot
+        ? await uploadFile('membership-uploads', files.headshot, 'headshot', folder)
+        : null
+      const logo_url = await uploadFile('membership-uploads', files.logo, 'logo', folder)
+      const supporting_docs_url = files.supporting_docs
+        ? await uploadFile('membership-uploads', files.supporting_docs, 'supporting_docs', folder)
+        : null
+      const emerging_proof_url = files.emerging_proof
+        ? await uploadFile('membership-uploads', files.emerging_proof, 'emerging_proof', folder)
+        : null
 
-      const res = await fetch('/api/membership/apply', { method: 'POST', body: formData })
+      const res = await fetch('/api/membership/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fields.full_name,
+          brand_name: fields.brand_name,
+          location: fields.location,
+          email: fields.email,
+          phone: fields.phone,
+          instagram: fields.instagram,
+          website_url: fields.website_url,
+          membership_tier: tier,
+          about_work: fields.about_work,
+          why_join: fields.why_join,
+          difw26_participation: fields.difw26,
+          values_agreement: fields.values_agreement,
+          consent_contact: fields.consent_contact,
+          consent_profile_sharing: fields.consent_profile_sharing,
+          consent_not_guaranteed: fields.consent_not_guaranteed,
+          headshot_url,
+          logo_url,
+          supporting_docs_url,
+          emerging_proof_url,
+        }),
+      })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Submission failed')
       setSuccess(true)

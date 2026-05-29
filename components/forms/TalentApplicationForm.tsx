@@ -4,7 +4,29 @@ import { useState, useRef } from 'react'
 import { Input, Textarea } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Chip } from '@/components/ui/Chip'
+import { createClient } from '@/lib/supabase/client'
 import type { ServiceType } from '@/lib/types'
+
+async function uploadFile(bucket: string, file: File, name: string, folder: string): Promise<string> {
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'bin'
+  const path = `${folder}/${name}.${ext}`
+
+  const res = await fetch('/api/upload-url', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bucket, path }),
+  })
+  const { token, path: confirmedPath, publicUrl, error } = await res.json()
+  if (!res.ok || !token) throw new Error(error ?? 'Failed to get upload URL')
+
+  const supabase = createClient()
+  const { error: uploadError } = await supabase.storage
+    .from(bucket)
+    .uploadToSignedUrl(confirmedPath, token, file)
+  if (uploadError) throw new Error(uploadError.message)
+
+  return publicUrl
+}
 
 const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
   { value: 'model', label: 'Model' },
@@ -148,22 +170,31 @@ export function TalentApplicationForm() {
     setError(null)
 
     try {
-      const formData = new FormData()
-      formData.append('full_name', fields.full_name)
-      formData.append('business_name', fields.business_name)
-      formData.append('location', fields.location)
-      formData.append('email', fields.email)
-      formData.append('phone', fields.phone)
-      formData.append('instagram_website', fields.instagram_website)
-      formData.append('services', JSON.stringify(services))
-      formData.append('services_other', fields.services_other)
-      formData.append('portfolio_url', fields.portfolio_url)
-      formData.append('about_me', fields.about_me)
-      formData.append('consent', String(fields.consent))
-      formData.append('headshot', files.headshot)
-      if (files.supplementary) formData.append('supplementary', files.supplementary)
+      const folder = crypto.randomUUID().slice(0, 8)
+      const headshot_url = await uploadFile('talent-uploads', files.headshot, 'headshot', folder)
+      const supplementary_url = files.supplementary
+        ? await uploadFile('talent-uploads', files.supplementary, 'supplementary', folder)
+        : null
 
-      const res = await fetch('/api/talent/apply', { method: 'POST', body: formData })
+      const res = await fetch('/api/talent/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fields.full_name,
+          business_name: fields.business_name,
+          location: fields.location,
+          email: fields.email,
+          phone: fields.phone,
+          instagram_website: fields.instagram_website,
+          services,
+          services_other: fields.services_other,
+          portfolio_url: fields.portfolio_url,
+          about_me: fields.about_me,
+          consent: fields.consent,
+          headshot_url,
+          supplementary_url,
+        }),
+      })
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Submission failed')
       setSuccess(true)
