@@ -280,18 +280,21 @@ export function TalentApplicationForm() {
           Links / Uploads
         </p>
 
-        <Input
-          label="Portfolio Link *"
-          type="text"
-          value={fields.portfolio_url}
-          onChange={(e) => set('portfolio_url', e.target.value)}
-          required
-          placeholder="http://"
-        />
+        <div>
+          <Input
+            label="Portfolio Link *"
+            type="text"
+            value={fields.portfolio_url}
+            onChange={(e) => set('portfolio_url', e.target.value)}
+            required
+            placeholder="https://"
+          />
+          <p className="text-xs text-[#888] font-body mt-2">Make sure your link starts with https:// and is publicly accessible — not set to private or login-required.</p>
+        </div>
 
         <FileInput
           label="Headshot"
-          hint="JPG, PNG or WebP — max 10MB"
+          hint="JPG, PNG or WebP — max 10MB. If submitting from a phone, consider emailing the photo to yourself first and compressing it before uploading."
           required
           accept={IMAGE_TYPES}
           maxMB={10}

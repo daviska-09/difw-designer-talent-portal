@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { StatusBadge } from '@/components/ui/StatusBadge'
+import { Linkify } from '@/components/ui/Linkify'
 import type { TalentApplication, ServiceType } from '@/lib/types'
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -23,6 +24,7 @@ const SERVICE_LABELS: Record<string, string> = {
 }
 
 const ALL_SERVICES = Object.keys(SERVICE_LABELS) as ServiceType[]
+
 
 interface Props {
   application: TalentApplication
@@ -405,7 +407,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
               <Field label="Location"><span className="text-white text-sm">{app.location}</span></Field>
 
               {app.instagram_website && (
-                <Field label="Instagram / Website"><span className="text-white text-sm">{app.instagram_website}</span></Field>
+                <Field label="Instagram / Website"><Linkify text={app.instagram_website} className="text-white text-sm break-all" /></Field>
               )}
 
               <Field label="Services">
@@ -441,14 +443,7 @@ export function TalentDetailPanel({ application: app, onClose, onStatusChange, o
 
               {app.portfolio_url && (
                 <Field label="Portfolio">
-                  <a
-                    href={app.portfolio_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white text-sm hover:text-white transition-colors break-all"
-                  >
-                    {app.portfolio_url}
-                  </a>
+                  <Linkify text={app.portfolio_url} className="text-white text-sm break-all" />
                 </Field>
               )}
 

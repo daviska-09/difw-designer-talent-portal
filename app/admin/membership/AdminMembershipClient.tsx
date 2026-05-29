@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { StatusBadge } from '@/components/ui/StatusBadge'
+import { Linkify } from '@/components/ui/Linkify'
 import type { MembershipApplication, MembershipStatus, MembershipTier, DIFW26Participation } from '@/lib/types'
 
 const TIER_OPTIONS: MembershipTier[] = ['emerging_designer', 'established_designer', 'signature_designer', 'producer']
@@ -491,10 +492,10 @@ function DetailPanel({
                   <a href={`mailto:${app.email}`} className="text-white text-sm hover:text-white transition-colors">{app.email}</a>
                 </Field>
                 <Field label="Phone">{app.phone}</Field>
-                {app.instagram && <Field label="Instagram">{app.instagram}</Field>}
+                {app.instagram && <Field label="Instagram"><Linkify text={app.instagram} className="text-white text-sm break-all" /></Field>}
                 {app.website_url && (
                   <Field label="Website">
-                    <a href={app.website_url} target="_blank" rel="noopener noreferrer" className="text-white text-sm hover:text-white transition-colors break-all">{app.website_url}</a>
+                    <Linkify text={app.website_url} className="text-white text-sm break-all" />
                   </Field>
                 )}
                 <Field label="DIFW26">

@@ -1,4 +1,5 @@
 import { Modal } from '@/components/ui/Modal'
+import { Linkify } from '@/components/ui/Linkify'
 import type { TalentApplication } from '@/lib/types'
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -98,7 +99,7 @@ export function TalentProfileModal({ talent, onClose }: Props) {
               <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
                 Instagram / Website
               </p>
-              <p className="text-white text-sm break-all">{talent.instagram_website}</p>
+              <Linkify text={talent.instagram_website} className="text-white text-sm break-all" />
             </div>
           )}
 
@@ -107,14 +108,7 @@ export function TalentProfileModal({ talent, onClose }: Props) {
               <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-white mb-1">
                 Portfolio
               </p>
-              <a
-                href={talent.portfolio_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white text-sm hover:text-white transition-colors break-all"
-              >
-                {talent.portfolio_url}
-              </a>
+              <Linkify text={talent.portfolio_url} className="text-white text-sm break-all" />
             </div>
           )}
 
