@@ -26,6 +26,7 @@ export async function syncTalentToAirtable(app: TalentApplication): Promise<stri
       'Headshot URL': app.headshot_url ?? '',
       'Supplementary URL': app.supplementary_url ?? '',
       'About Me': app.about_me,
+      'Consent': app.consent,
       'Status': app.status,
       'Supabase ID': app.id,
     })
