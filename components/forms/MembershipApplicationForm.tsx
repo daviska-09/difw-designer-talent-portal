@@ -551,7 +551,7 @@ export function MembershipApplicationForm() {
           Payment
         </p>
         <p className="text-sm text-[#888] font-body leading-relaxed">
-          Upon acceptance, applicants will receive a payment link for annual membership dues. Membership is valid for one DIFW programme cycle, including the corresponding annual fashion week and member programming period, and expires on 31 December of the membership year.
+          Upon acceptance, applicants will receive a payment link for annual membership dues. Membership is valid for one DIFW programme cycle, including the corresponding annual fashion week and member programming period, and expires on 1st June 2027.
         </p>
       </div>
 
