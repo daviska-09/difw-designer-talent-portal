@@ -68,6 +68,10 @@ export async function syncMembershipToAirtable(
       'Logo URL': app.logo_url,
       'Supporting Docs URL': app.supporting_docs_url ?? '',
       'Emerging Proof URL': app.emerging_proof_url ?? '',
+      'Values Agreement': app.values_agreement,
+      'Consent Contact': app.consent_contact,
+      'Consent Profile Sharing': app.consent_profile_sharing,
+      'Consent Not Guaranteed': app.consent_not_guaranteed,
       'Status': app.status,
       'Supabase ID': app.id,
     })
