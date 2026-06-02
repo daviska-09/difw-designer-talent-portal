@@ -392,9 +392,16 @@ function DetailPanel({
                         </Button>
                       </>
                     ) : (
-                      <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
-                        Delete
-                      </Button>
+                      <>
+                        <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={!!loading}>
+                          Delete
+                        </Button>
+                        {app.status === 'approved' && (
+                          <Button variant="outline" onClick={() => setShowApproveModal(true)} disabled={!!loading}>
+                            Resend Payment Email
+                          </Button>
+                        )}
+                      </>
                     )}
                   </>
                 )}
