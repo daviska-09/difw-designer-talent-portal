@@ -312,9 +312,11 @@ export function MembershipApplicationForm() {
         <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555] mb-2">
           Membership Tier *
         </p>
-        {/* TODO: hyperlink "click here" to the membership page once built */}
         <p className="text-xs text-[#888] font-body mb-6">
-          To read more about each membership tier, click here.
+          To read more about each membership tier,{' '}
+          <a href="https://www.dublin-ifw.com/join-difw" target="_blank" rel="noopener noreferrer" className="underline hover:text-[#555] transition-colors">
+            click here
+          </a>.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {TIERS.map((t) => (

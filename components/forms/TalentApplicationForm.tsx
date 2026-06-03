@@ -364,7 +364,7 @@ export function TalentApplicationForm() {
             required
           />
           <span className="text-sm text-[#555] group-hover:text-[#333] transition-colors leading-relaxed font-body">
-            By submitting this form, you confirm that you are happy for DIFW to share your details and portfolio with our members for the purpose of collaboration opportunities.
+            By submitting this form, you consent to DIFW sharing your details and portfolio with members for collaboration opportunities, and to using your profile, portfolio, and related content in promotional materials, presentations, and marketing activities connected to the DIFW Talent Directory.
           </span>
         </label>
       </div>
