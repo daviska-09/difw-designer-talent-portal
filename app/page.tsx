@@ -26,19 +26,19 @@ export default function HomePage() {
         <img
           src="/logo.webp"
           alt="Dublin Independent Fashion Week"
-          className="w-[min(480px,80vw)] mb-12"
+          className="w-[min(360px,70vw)] mb-12"
         />
 
         <div className="flex flex-col sm:flex-row gap-6">
           <Link
             href="/membership/apply"
-            className="px-12 py-5 bg-white text-black font-display text-xl tracking-[3px] uppercase hover:bg-[#e0e0e0] transition-colors"
+            className="px-10 py-4 bg-white text-black font-display text-lg tracking-[3px] uppercase hover:bg-[#e0e0e0] transition-colors"
           >
             Apply for Membership
           </Link>
           <Link
             href="/talent/apply"
-            className="px-12 py-5 bg-transparent border border-white text-white font-display text-xl tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
+            className="px-10 py-4 bg-transparent border border-white text-white font-display text-lg tracking-[3px] uppercase hover:bg-white hover:text-black transition-colors"
           >
             Submit to Talent Directory
           </Link>
