@@ -88,11 +88,23 @@ export async function POST(
       .eq('email', app.email)
       .single()
 
+    let emailSent = false
+    let emailError: string | undefined
     if (memberRecord?.id) {
-      sendMemberWelcome(app.email, app.full_name, memberRecord.id).catch(console.error)
+      try {
+        const emailResult = await sendMemberWelcome(app.email, app.full_name, memberRecord.id)
+        console.log('Resend welcome result:', JSON.stringify(emailResult))
+        emailSent = true
+      } catch (emailErr) {
+        console.error('Resend welcome error:', emailErr)
+        emailError = String(emailErr)
+      }
+    } else {
+      emailError = 'Member record not found'
+      console.error('sendMemberWelcome skipped:', emailError)
     }
 
-    return NextResponse.json({ success: true, emailSent: true })
+    return NextResponse.json({ success: true, emailSent, ...(emailError ? { emailError } : {}) })
   } catch (err) {
     console.error('Member activation error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

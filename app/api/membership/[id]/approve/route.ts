@@ -47,13 +47,20 @@ export async function POST(
       return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
-    sendMembershipApproval(app.email, app.full_name, app.membership_tier, payment_link, payment_amount).catch(console.error)
+    let emailSent = false
+    try {
+      const emailResult = await sendMembershipApproval(app.email, app.full_name, app.membership_tier, payment_link, payment_amount)
+      console.log('Resend approval result:', JSON.stringify(emailResult))
+      emailSent = true
+    } catch (emailErr) {
+      console.error('Resend approval error:', emailErr)
+    }
 
     if (app.airtable_record_id) {
       updateMembershipStatusInAirtable(app.airtable_record_id, 'approved').catch(console.error)
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, emailSent })
   } catch (err) {
     console.error('Membership approve error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
