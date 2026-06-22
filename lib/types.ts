@@ -12,7 +12,7 @@ export type ServiceType =
   | 'hair_stylist'
   | 'mua'
   | 'production_crew'
-  | 'backstage_assistant'
+  | 'general_volunteer'
   | 'lighting_technician'
   | 'sound_technician'
   | 'dj_musician'

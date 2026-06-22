@@ -37,7 +37,7 @@ const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
   { value: 'hair_stylist', label: 'Hair Stylist' },
   { value: 'mua', label: 'Makeup Artist (MUA)' },
   { value: 'production_crew', label: 'Production Crew' },
-  { value: 'backstage_assistant', label: 'Backstage Assistant' },
+  { value: 'general_volunteer', label: 'General Volunteer' },
   { value: 'lighting_technician', label: 'Lighting Technician' },
   { value: 'sound_technician', label: 'Sound Technician' },
   { value: 'dj_musician', label: 'DJ / Musician' },
@@ -141,9 +141,11 @@ export function TalentApplicationForm() {
   const [error, setError] = useState<string | null>(null)
 
   function toggleService(s: ServiceType) {
-    setServices((prev) =>
-      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
-    )
+    setServices((prev) => {
+      if (prev.includes(s)) return prev.filter((x) => x !== s)
+      if (prev.length >= 2) return prev
+      return [...prev, s]
+    })
   }
 
   function set(key: string, value: string | boolean) {
@@ -280,7 +282,10 @@ export function TalentApplicationForm() {
         <p className="text-xs tracking-[2px] uppercase font-ui font-semibold text-[#555] mb-2">
           Services *
         </p>
-        <p className="text-xs text-[#888] font-body mb-4">Check all that apply</p>
+        <p className="text-sm text-[#555] font-body mb-4 leading-relaxed">
+          Please select the skill that best represents your primary area of practice, and is most clearly reflected in your portfolio and supporting materials.<br /><br />
+          If you work across multiple disciplines, you may submit additional applications with separate portfolios relevant to each skill.
+        </p>
         <div className="flex flex-wrap gap-3">
           {SERVICE_OPTIONS.map((opt) => (
             <Chip

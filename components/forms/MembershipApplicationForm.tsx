@@ -292,12 +292,17 @@ export function MembershipApplicationForm() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <Input
-          label="Instagram"
-          value={fields.instagram}
-          onChange={(e) => set('instagram', e.target.value)}
-          placeholder="@yourbrand"
-        />
+        <div>
+          <Input
+            label="Instagram"
+            value={fields.instagram}
+            onChange={(e) => set('instagram', e.target.value)}
+            placeholder="@yourbrand"
+          />
+          <p className="text-xs text-[#888] font-body mt-2">
+            So you can be added to the DIFW &ldquo;Close Friends&rdquo; list!
+          </p>
+        </div>
         <Input
           label="Website"
           type="text"
