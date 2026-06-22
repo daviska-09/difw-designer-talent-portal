@@ -9,7 +9,7 @@ const SERVICE_LABELS: Record<string, string> = {
   hair_stylist: 'Hair Stylist',
   mua: 'MUA',
   production_crew: 'Production Crew',
-  backstage_assistant: 'Backstage Assistant',
+  general_volunteer: 'General Volunteer',
   lighting_technician: 'Lighting Technician',
   sound_technician: 'Sound Technician',
   dj_musician: 'DJ / Musician',

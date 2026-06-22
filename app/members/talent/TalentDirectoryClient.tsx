@@ -15,7 +15,7 @@ const SERVICE_OPTIONS: { value: ServiceType; label: string }[] = [
   { value: 'hair_stylist', label: 'Hair Stylist' },
   { value: 'mua', label: 'Makeup Artist (MUA)' },
   { value: 'production_crew', label: 'Production Crew' },
-  { value: 'backstage_assistant', label: 'Backstage Assistant' },
+  { value: 'general_volunteer', label: 'General Volunteer' },
   { value: 'lighting_technician', label: 'Lighting Technician' },
   { value: 'sound_technician', label: 'Sound Technician' },
   { value: 'dj_musician', label: 'DJ / Musician' },
