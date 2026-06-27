@@ -51,6 +51,16 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
           </Link>
 
           <Link
+            href="/admin/events"
+            className={`px-4 py-4 font-display text-xl tracking-widest uppercase transition-all ${
+              pathname.startsWith('/admin/events')
+                ? 'bg-white text-black'
+                : 'text-white opacity-60 hover:opacity-100 hover:bg-[#111]'
+            }`}
+          >
+            Events
+          </Link>
+          <Link
             href="/admin/posts"
             className={`px-4 py-4 font-display text-xl tracking-widest uppercase transition-all ${
               pathname.startsWith('/admin/posts')

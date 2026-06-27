@@ -121,6 +121,7 @@ export interface EventSubmission {
   additional_info: string | null
   status: EventSubmissionStatus
   airtable_record_id: string | null
+  deleted_at: string | null
 }
 
 export interface Member {

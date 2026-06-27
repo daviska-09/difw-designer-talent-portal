@@ -190,7 +190,8 @@ create table if not exists event_submissions (
 
   -- Meta
   status text not null default 'pending', -- 'pending' | 'accepted' | 'deferred' | 'rejected'
-  airtable_record_id text
+  airtable_record_id text,
+  deleted_at timestamptz
 );
 
 alter table event_submissions enable row level security;
@@ -202,3 +203,9 @@ create policy "Admins can do everything on event_submissions"
 create index if not exists event_submissions_status_idx on event_submissions(status);
 create index if not exists event_submissions_email_idx on event_submissions(email);
 create index if not exists event_submissions_created_at_idx on event_submissions(created_at desc);
+
+-- ============================================================
+-- MIGRATION: Add deleted_at to event_submissions if table already exists
+-- Run this in the Supabase SQL Editor if the table was created without it
+-- ============================================================
+-- alter table event_submissions add column if not exists deleted_at timestamptz;
