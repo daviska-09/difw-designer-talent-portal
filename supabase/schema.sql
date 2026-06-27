@@ -134,3 +134,71 @@ create index if not exists membership_applications_email_idx on membership_appli
 -- ============================================================
 -- alter table talent_applications add column if not exists deleted_at timestamptz;
 -- alter table membership_applications add column if not exists deleted_at timestamptz;
+
+-- ============================================================
+-- Event Submissions (DIFW26 programme proposals)
+-- ============================================================
+
+create table if not exists event_submissions (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz default now(),
+
+  -- Section 1: Applicant Information
+  lead_applicant_name text not null,
+  email text not null,
+  phone text not null,
+  brand_name text not null,
+  website text,
+  social_links text,
+
+  -- Section 2: About Your Practice
+  practice_description text,
+  work_category text,
+  work_category_other text,
+
+  -- Section 3: Event Overview
+  event_title text not null,
+  event_type text,
+  event_type_other text,
+  event_collaboration text,       -- 'solo' | 'collaborative'
+  collaborators text,
+  open_to_alternatives text,      -- 'yes' | 'no'
+  event_description text,
+  event_access text,              -- 'public_free' | 'public_ticketed' | 'invite_only' | 'mixed'
+  intended_audience text,
+  estimated_attendees text,
+
+  -- Section 4: Creative Concept
+  event_concept text,
+  why_difw26 text,
+  supporting_materials_url text,
+
+  -- Section 5: Logistics
+  venue_secured text,             -- 'yes' | 'no'
+  venue_details text,
+  venue_preference text,
+  preferred_dates text[],
+  preferred_time text,            -- 'morning' | 'afternoon' | 'evening' | 'flexible'
+  event_duration text,
+  technical_requirements text,
+
+  -- Final Declaration
+  confirm_accurate boolean not null default false,
+  confirm_not_guaranteed boolean not null default false,
+  confirm_deadline boolean not null default false,
+  additional_info text,
+
+  -- Meta
+  status text not null default 'pending', -- 'pending' | 'accepted' | 'deferred' | 'rejected'
+  airtable_record_id text
+);
+
+alter table event_submissions enable row level security;
+
+create policy "Admins can do everything on event_submissions"
+  on event_submissions for all
+  using (auth.jwt() ->> 'role' = 'admin' or (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin');
+
+create index if not exists event_submissions_status_idx on event_submissions(status);
+create index if not exists event_submissions_email_idx on event_submissions(email);
+create index if not exists event_submissions_created_at_idx on event_submissions(created_at desc);

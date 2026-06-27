@@ -153,6 +153,60 @@ export async function sendAccessLink(to: string, fullName: string, magicLink: st
   })
 }
 
+export async function sendEventSubmissionConfirmation(
+  to: string,
+  fullName: string,
+  eventTitle: string,
+  eventType: string,
+) {
+  const firstName = fullName.split(' ')[0]
+  return getResend().emails.send({
+    from: FROM,
+    replyTo: REPLY_TO,
+    to,
+    subject: 'DIFW26 — Event Proposal Received',
+    html: emailWrapper(`
+      <h1>Proposal Received</h1>
+      <p>Hi ${firstName},</p>
+      <p>Thank you for submitting your event proposal for <strong>Dublin Independent Fashion Week 2026</strong>. We're delighted to receive your application and look forward to reviewing your proposal.</p>
+
+      <div style="background:#f9f9f9;border-left:3px solid #000;padding:16px 20px;margin:32px 0;">
+        <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#888;">Submitted Proposal</p>
+        <p style="margin:0 0 4px;font-size:16px;font-weight:700;color:#000;">${eventTitle}</p>
+        <p style="margin:0;font-size:13px;color:#555;">${eventType}</p>
+      </div>
+
+      <p>Your application will be reviewed by the DIFW26 Curation Committee. Applications will either be <strong>Accepted</strong> or <strong>Deferred for Further Development</strong>. A deferred application is not a rejection — it simply means that further development is required before the proposal can be included in the programme.</p>
+
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:40px 0 16px;">Key Dates</p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <tr style="border-bottom:1px solid #e5e5e5;">
+          <td style="padding:10px 16px 10px 0;color:#888;white-space:nowrap;vertical-align:top;font-size:11px;letter-spacing:1px;text-transform:uppercase;">27 July 2026</td>
+          <td style="padding:10px 0;color:#333;">Submission Deadline</td>
+        </tr>
+        <tr style="border-bottom:1px solid #e5e5e5;">
+          <td style="padding:10px 16px 10px 0;color:#888;white-space:nowrap;vertical-align:top;font-size:11px;letter-spacing:1px;text-transform:uppercase;">3 August 2026</td>
+          <td style="padding:10px 0;color:#333;">Acceptance and Deferral Notifications Issued</td>
+        </tr>
+        <tr style="border-bottom:1px solid #e5e5e5;">
+          <td style="padding:10px 16px 10px 0;color:#888;white-space:nowrap;vertical-align:top;font-size:11px;letter-spacing:1px;text-transform:uppercase;">August 2026</td>
+          <td style="padding:10px 0;color:#333;">
+            <strong style="color:#000;">Approved:</strong> Design and promotional asset production begins<br>
+            <strong style="color:#000;">Deferred:</strong> Development support provided by the DIFW26 Curation Committee
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 16px 10px 0;color:#888;white-space:nowrap;vertical-align:top;font-size:11px;letter-spacing:1px;text-transform:uppercase;">1 September 2026</td>
+          <td style="padding:10px 0;color:#333;">Deadline for all final event information, graphics, and promotional materials</td>
+        </tr>
+      </table>
+
+      <p style="margin-top:40px;">If you have any questions in the meantime, please don't hesitate to reach out at <a href="mailto:info@dublin-ifw.com" style="color:#000;">info@dublin-ifw.com</a></p>
+      <p>Thank you for being part of DIFW26.</p>
+    `),
+  })
+}
+
 export async function sendAdminPasswordReset(to: string, resetLink: string) {
   return getResend().emails.send({
     from: FROM,

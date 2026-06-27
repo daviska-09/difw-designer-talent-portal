@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/server'
 
-const ALLOWED_BUCKETS = ['talent-uploads', 'membership-uploads']
+const ALLOWED_BUCKETS = ['talent-uploads', 'membership-uploads', 'event-uploads']
 
 export async function POST(request: NextRequest) {
   try {

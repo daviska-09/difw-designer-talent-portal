@@ -1,9 +1,10 @@
 import Airtable from 'airtable'
-import type { TalentApplication, MembershipApplication, Post } from './types'
+import type { TalentApplication, MembershipApplication, Post, EventSubmission } from './types'
 
 const TALENT_TABLE = 'Talent Submissions'
 const MEMBERSHIP_TABLE = 'Membership Applications'
 const POSTS_TABLE = 'Announcements'
+const EVENTS_TABLE = 'Event Submissions'
 
 function getBase() {
   return new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(
@@ -127,6 +128,49 @@ export async function deletePostFromAirtable(airtableRecordId: string): Promise<
     await getBase()(POSTS_TABLE).destroy(airtableRecordId)
   } catch (err) {
     console.error('Airtable post delete failed:', err)
+  }
+}
+
+export async function syncEventToAirtable(sub: EventSubmission): Promise<string | null> {
+  try {
+    const record = await getBase()(EVENTS_TABLE).create({
+      'Lead Applicant Name': sub.lead_applicant_name,
+      'Email': sub.email,
+      'Phone': sub.phone,
+      'Brand / Organisation': sub.brand_name,
+      'Website': sub.website ?? '',
+      'Social Links': sub.social_links ?? '',
+      'Practice Description': sub.practice_description ?? '',
+      'Work Category': sub.work_category ?? '',
+      'Work Category Other': sub.work_category_other ?? '',
+      'Event Title': sub.event_title,
+      'Event Type': sub.event_type,
+      'Event Type Other': sub.event_type_other ?? '',
+      'Collaboration': sub.event_collaboration,
+      'Collaborators': sub.collaborators ?? '',
+      'Open to Alternatives': sub.open_to_alternatives ?? '',
+      'Public Description': sub.event_description ?? '',
+      'Event Access': sub.event_access ?? '',
+      'Intended Audience': sub.intended_audience ?? '',
+      'Estimated Attendees': sub.estimated_attendees ?? '',
+      'Event Concept': sub.event_concept ?? '',
+      'Why DIFW26': sub.why_difw26 ?? '',
+      'Supporting Materials URL': sub.supporting_materials_url ?? '',
+      'Venue Secured': sub.venue_secured ?? '',
+      'Venue Details': sub.venue_details ?? '',
+      'Venue Preference': sub.venue_preference ?? '',
+      'Preferred Dates': (sub.preferred_dates ?? []).join(', '),
+      'Preferred Time': sub.preferred_time ?? '',
+      'Event Duration': sub.event_duration ?? '',
+      'Technical Requirements': sub.technical_requirements ?? '',
+      'Additional Info': sub.additional_info ?? '',
+      'Status': sub.status,
+      'Supabase ID': sub.id,
+    })
+    return record.id
+  } catch (err) {
+    console.error('Airtable sync failed (event):', err)
+    return null
   }
 }
 

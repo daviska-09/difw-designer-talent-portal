@@ -81,6 +81,48 @@ export interface Post {
   airtable_record_id: string | null
 }
 
+export type EventSubmissionStatus = 'pending' | 'accepted' | 'deferred' | 'rejected'
+
+export interface EventSubmission {
+  id: string
+  created_at: string
+  lead_applicant_name: string
+  email: string
+  phone: string
+  brand_name: string
+  website: string | null
+  social_links: string | null
+  practice_description: string | null
+  work_category: string | null
+  work_category_other: string | null
+  event_title: string
+  event_type: string
+  event_type_other: string | null
+  event_collaboration: string
+  collaborators: string | null
+  open_to_alternatives: string | null
+  event_description: string | null
+  event_access: string | null
+  intended_audience: string | null
+  estimated_attendees: string | null
+  event_concept: string | null
+  why_difw26: string | null
+  supporting_materials_url: string | null
+  venue_secured: string | null
+  venue_details: string | null
+  venue_preference: string | null
+  preferred_dates: string[]
+  preferred_time: string | null
+  event_duration: string | null
+  technical_requirements: string | null
+  confirm_accurate: boolean
+  confirm_not_guaranteed: boolean
+  confirm_deadline: boolean
+  additional_info: string | null
+  status: EventSubmissionStatus
+  airtable_record_id: string | null
+}
+
 export interface Member {
   id: string
   full_name: string | null
