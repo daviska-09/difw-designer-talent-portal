@@ -207,6 +207,102 @@ export async function sendEventSubmissionConfirmation(
   })
 }
 
+export async function sendEventAccepted(
+  to: string,
+  fullName: string,
+  eventTitle: string,
+) {
+  const firstName = fullName.split(' ')[0]
+  return getResend().emails.send({
+    from: FROM,
+    replyTo: REPLY_TO,
+    to,
+    subject: 'Welcome to DIFW26! Your Event Has Been Accepted',
+    html: emailWrapper(`
+      <h1>Your Event Has Been Accepted</h1>
+      <p>Hi ${firstName},</p>
+      <p>Thank you for submitting your event proposal to be part of Dublin Independent Fashion Week 2026.</p>
+      <p>We&apos;re delighted to let you know that your application has been accepted for this year&apos;s programme! The DIFW26 Curation Committee was impressed by your proposal and believes it will make a valuable contribution to this year&apos;s festival.</p>
+
+      <div style="background:#f9f9f9;border-left:3px solid #000;padding:16px 20px;margin:32px 0;">
+        <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#888;">Accepted Event</p>
+        <p style="margin:0;font-size:16px;font-weight:700;color:#000;">${eventTitle}</p>
+      </div>
+
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:40px 0 16px;">What Happens Next</p>
+
+      <p><strong>1. Join the DIFW Discord</strong><br>
+      Join here: <a href="https://discord.gg/xPQxS8WT7E" style="color:#000;">https://discord.gg/xPQxS8WT7E</a><br>
+      Our Discord is open to the public, making it a great place to connect with other designers, creatives and members of the wider fashion community. Once you&apos;ve joined, we&apos;ll add you to the #DIFW-Members private channel, where you&apos;ll receive participant updates and a dedicated space to ask questions and connect with other DIFW26 participants.<br>
+      The DIFW Curation Committee also hosts weekly Open Sessions every Tuesday from 8:00&ndash;9:00pm, where you can get feedback, brainstorm ideas, and receive support as you plan your event.</p>
+
+      <p><strong>2. Make use of the DIFW Talent Directory</strong><br>
+      If you&apos;re still looking for collaborators, now is the perfect time to browse the DIFW Talent Directory! Whether you need models, photographers, videographers, stylists, hair and makeup artists, musicians, backstage crew or other creatives, the directory is there to help you build your team.</p>
+
+      <p><strong>3. Continue planning your event</strong><br>
+      In the meantime, continue developing your event and confirming arrangements with your venue, collaborators and wider team.</p>
+
+      <p><strong>4. Start preparing any marketing assets</strong><br>
+      In mid-August, we&apos;ll be in touch to collect your event information and promotional assets for inclusion in the official DIFW26 programme and marketing campaign.</p>
+
+      <p>In the meantime, you may wish to begin preparing any event imagery, graphics, logos, speaker or designer information, and other promotional content so you&apos;re ready when submissions open.</p>
+
+      <p style="background:#f9f9f9;border-left:3px solid #000;padding:14px 20px;margin:32px 0;font-size:13px;color:#555;">
+        Please note that all final event information, imagery and promotional assets must be submitted by <strong style="color:#000;">1 September 2026</strong>. After this date, we cannot guarantee any further changes, as production of our printed and digital festival materials will already be underway.
+      </p>
+
+      <p>We&apos;re incredibly excited to work with you and can&apos;t wait to share your event as part of DIFW26. Congratulations once again, and thank you for helping us celebrate independent fashion across Dublin!</p>
+
+      <p>Best wishes,<br>The DIFW Curation Committee</p>
+    `),
+  })
+}
+
+export async function sendEventDeferred(
+  to: string,
+  fullName: string,
+  eventTitle: string,
+) {
+  const firstName = fullName.split(' ')[0]
+  return getResend().emails.send({
+    from: FROM,
+    replyTo: REPLY_TO,
+    to,
+    subject: 'DIFW26 Event Submission Update',
+    html: emailWrapper(`
+      <h1>Event Submission Update</h1>
+      <p>Hi ${firstName},</p>
+      <p>Thank you for submitting your event proposal to be part of Dublin Independent Fashion Week 2026.</p>
+
+      <div style="background:#f9f9f9;border-left:3px solid #000;padding:16px 20px;margin:32px 0;">
+        <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#888;">Submitted Proposal</p>
+        <p style="margin:0;font-size:16px;font-weight:700;color:#000;">${eventTitle}</p>
+      </div>
+
+      <p>After careful review by the DIFW26 Curation Committee, we&apos;d like to defer your application while we work with you to further develop your proposal.</p>
+      <p>This isn&apos;t a rejection. Rather, the Committee believes your event has potential, but that it would benefit from some refinement before being included in the official DIFW26 programme.</p>
+      <p>In some cases, this may involve relatively small changes, such as adjusting the event timing, ticketing format, or audience experience. In others, it may involve rethinking aspects of the event concept based on what we&apos;ve learned from previous editions of DIFW and what we know works best within the wider festival programme.</p>
+
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#555;margin:40px 0 16px;">What Happens Next</p>
+
+      <p><strong>1. Join the DIFW Discord</strong><br>
+      Join here: <a href="https://discord.gg/xPQxS8WT7E" style="color:#000;">https://discord.gg/xPQxS8WT7E</a><br>
+      Our Discord is open to the public, making it a great place to connect with other designers, creatives and members of the wider fashion community. Once you&apos;ve joined, we&apos;ll add you to the #DIFW-Members private channel, a dedicated space to ask questions and connect with other DIFW26 participants.</p>
+
+      <p><strong>2. Receive feedback from the DIFW Curation Committee</strong><br>
+      We&apos;ll be in touch shortly with feedback on your proposal, either via email or by arranging a virtual meeting, depending on the type of changes we recommend. This is an opportunity to ask questions, discuss our recommendations, and work collaboratively to strengthen your event.<br><br>
+      Following your initial feedback, you&apos;re encouraged to attend the DIFW Curation Committee&apos;s weekly Open Sessions on Discord, held every Tuesday from 8:00&ndash;9:00pm. These sessions are a chance to ask questions, workshop ideas, receive feedback on your progress, and get ongoing support as you refine your proposal alongside other participants.</p>
+
+      <p><strong>3. Continue developing your event</strong><br>
+      In the meantime, continue refining your event concept and discussing any potential changes with your venue or collaborators where appropriate. Once we&apos;ve worked through the recommended changes together, we&apos;ll ask you to resubmit your Event Submission form in the DIFW Portal so we can formally accept your event into the DIFW26 programme.</p>
+
+      <p>Our goal is to help make your event as successful as possible, and we&apos;re looking forward to working with you to get it there.</p>
+      <p>Thank you again for applying, and we look forward to collaborating with you!</p>
+      <p>Best wishes,<br>The DIFW Curation Committee</p>
+    `),
+  })
+}
+
 export async function sendAdminPasswordReset(to: string, resetLink: string) {
   return getResend().emails.send({
     from: FROM,
